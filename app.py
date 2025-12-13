@@ -132,7 +132,7 @@ def api_book():
         name = (data.get("name") or "").strip()
         intro = (data.get("intro") or "").strip()
 
-        if not seat_id or not name or not intro:
+        if not seat_id or not name :
             return jsonify({"success": False, "message": "ข้อมูลไม่ครบ"}), 400
 
         rpc = supabase.rpc("book_seat", {
