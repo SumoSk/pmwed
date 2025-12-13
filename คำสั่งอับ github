@@ -26,3 +26,10 @@ which python
 python -V
 which pip
 pip -V
+
+
+cd /home/sumoskb/pmwed
+git remote set-url origin https://github.com/SumoSk/pmwed.git
+git fetch origin
+git reset --hard origin/main
+git clean -fd
