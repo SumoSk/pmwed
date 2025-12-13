@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#db2777">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <title>Palmy & Sumo Wedding Booking</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet">
+
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    
+      body {
+    font-family: 'Prompt', 'Segoe UI', sans-serif;
+    margin: 0;
+    background-color: white;
+    padding: 10px;
+    padding-bottom: 120px;
+    font-size: 14px;
+}
+.nav-btn{
+  font-family:'Kanit', system-ui, -apple-system, 'Segoe UI', sans-serif !important;
+  font-weight:500 !important;
+}
+
+.nav-btn, .lux-btn, .admin-card, .pill{
+  font-family: 'Kanit', sans-serif;
+  font-weight: 600;
+}
+.lux-name{ font-weight: 700; }
+.lux-seat{ font-weight: 600; }
+
+
+
+    .nav-btn{
+      background-color:#d1fae5;color:#065f46;padding:10px 20px;border-radius:20px;
+      font-weight:800;box-shadow:0 2px 5px rgba(0,0,0,0.1);
+      transition:.2s;border:1px solid #a7f3d0;display:flex;align-items:center;gap:8px;
+    }
+    .nav-btn:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,0.15);background-color:#a7f3d0;}
+
+    #venue-map{width:min(784px,95vw);margin:0 auto;border-radius:12px;overflow:hidden;box-shadow:0 0 20px rgba(0,0,0,0.1);background:#fff;}
+    .map-wrapper{position:relative;width:100%;}
+    .map-img{width:100%;height:auto;display:block;user-select:none;-webkit-user-drag:none;}
+    #table-overlay{position:absolute;inset:0;z-index:20;}
+
+    .table-hotspot{
+      position:absolute; transform:translate(-50%,-50%);
+      cursor:pointer; border-radius:999px;
+      width:56px; height:56px;
+      border:2px solid rgba(34,197,94,.9);
+      background:rgba(134,239,172,.18);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:900;color:rgba(6,95,70,.95);
+      -webkit-tap-highlight-color:transparent;
+      transition:.15s;
+      padding-top: 10px; /* เผื่อที่ให้คำว่า "กด" */
+    }
+    .table-hotspot:hover{transform:translate(-50%,-50%) scale(1.10);background:rgba(134,239,172,.35);box-shadow:0 0 0 6px rgba(16,185,129,.10);}
+    .table-full{border-color:rgba(190,18,60,.95);background:rgba(244,63,94,.20);color:rgba(127,29,29,.95);}
+    .table-full:hover{background:rgba(244,63,94,.32);box-shadow:0 0 0 6px rgba(244,63,94,.12);}
+    .table-selected{border-color:rgba(219,39,119,.95);background:rgba(236,72,153,.20);box-shadow:0 0 0 7px rgba(236,72,153,.14);}
+
+    /* ป้ายชื่อโต๊ะ (ปรับใหม่ กันทับป้าย VIP) */
+    .table-label{
+      position:absolute;
+      bottom:44px;              /* 🔽 ขยับลงจากเดิม */
+      left:50%;
+      transform:translateX(-50%);
+      background:rgba(255,255,255,.94);
+      border:1px solid rgba(226,232,240,.9);
+      border-radius:999px;
+      padding:2px 8px;          /* 🔽 เล็กลง */
+      font-size:10px;           /* 🔽 ตัวเล็กลง */
+      font-weight:700;
+      color:#1f2937;
+      white-space:nowrap;
+      box-shadow:0 4px 12px rgba(15,23,42,.08);
+      pointer-events:none;
+    }
+
+    /* hint ใต้เลขโต๊ะ */
+    .table-tap-hint{
+      position:absolute;
+      bottom:6px;
+      left:50%;
+      transform:translateX(-50%);
+      font-size:9px;
+      font-weight:800;
+      letter-spacing:.12em;
+      color:rgba(6,95,70,.65);
+      pointer-events:none;
+    }
+
+    @media (max-width:640px){
+      .table-hotspot{width:66px;height:66px;font-size:16px;padding-top:10px;}
+      .table-label{bottom:40px;font-size:9px;padding:2px 7px;}
+      .table-tap-hint{font-size:8px;bottom:5px;}
+      .swal2-popup{width:95vw !important;margin:0 !important;}
+    }
+
+    /* SweetAlert Luxury */
+    .swal2-popup{
+      border-radius: 24px !important;
+      box-shadow: 0 30px 90px rgba(15,23,42,.18) !important;
+    }
+    .swal2-html-container{ margin:0 !important; }
+
+    /* ===== Luxury popup styles (โต๊ะ) ===== */
+    .lux-wrap{
+      background: linear-gradient(180deg, #fff 0%, #fff7fb 55%, #fff 100%);
+      border: 1px solid rgba(203, 213, 225, .65);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 18px 60px rgba(15, 23, 42, .10);
+    }
+    .lux-row{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(226, 232, 240, .75);
+      background: rgba(255,255,255,.72);
+      backdrop-filter: blur(6px);
+    }
+    .lux-row:last-child{border-bottom:none;}
+    .lux-left{min-width:0;}
+    .lux-seat{
+      font-size:11px;
+      letter-spacing:.08em;
+      color:#94a3b8;
+      font-weight:900;
+      text-transform: uppercase;
+    }
+    .lux-name{
+      margin-top:2px;
+      font-size:14px;
+      font-weight:900;
+      color:#0f172a;
+      line-height:1.2;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .lux-intro{
+      margin-top:3px;
+      font-size:11px;
+      color:#64748b;
+      font-weight:700;
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+    .lux-intro .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(226, 232, 240, .9);
+      background: rgba(255,255,255,.75);
+      box-shadow: 0 8px 22px rgba(15, 23, 42, .06);
+    }
+    .pill{
+      font-size:11px;font-weight:900;padding:4px 10px;border-radius:999px;white-space:nowrap;
+      border:1px solid rgba(226,232,240,.9);
+      box-shadow:0 10px 26px rgba(15,23,42,.07);
+    }
+    .pill.ok{background:#ecfdf5;color:#065f46;}
+    .pill.bad{background:#fff1f2;color:#9f1239;}
+    .pill.arr{background:#eef2ff;color:#3730a3;}
+
+    .lux-btn{
+      padding:10px 14px;
+      border-radius: 14px;
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing:.02em;
+      border: 1px solid rgba(226,232,240,.9);
+      transition:.15s;
+      box-shadow: 0 12px 30px rgba(15,23,42,.08);
+    }
+    .lux-btn:hover{transform: translateY(-1px);}
+    .lux-btn:active{transform: translateY(0px);}
+    .lux-btn.reg{
+      color:#ffffff;
+      background: linear-gradient(135deg, #16a34a 0%, #34d399 100%);
+      border-color: rgba(16,185,129,.25);
+    }
+    .lux-btn.arrive{
+      color:#ffffff;
+      background: linear-gradient(135deg, #db2777 0%, #fb7185 100%);
+      border-color: rgba(219,39,119,.25);
+    }
+    .lux-btn.disabled{
+      background:#f1f5f9;
+      color:#94a3b8;
+      box-shadow:none;
+      cursor:not-allowed;
+    }
+    .lux-nav{
+      display:flex; gap:10px; margin-top:12px;
+    }
+    .lux-nav button{
+      flex:1;
+      padding:10px 12px;
+      border-radius: 16px;
+      font-weight: 900;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid rgba(226,232,240,.9);
+      box-shadow: 0 14px 34px rgba(15,23,42,.08);
+      transition:.15s;
+    }
+    .lux-nav button:hover{transform:translateY(-1px);}
+
+    .admin-card{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 16px;
+  border-radius:18px;
+  border:1px solid #e5e7eb;
+  background:white;
+  font-weight:900;
+  font-size:15px;
+  box-shadow:0 10px 30px rgba(0,0,0,.08);
+  transition:.15s;
+}
+.admin-card:hover{
+  transform:translateY(-1px);
+  box-shadow:0 14px 40px rgba(0,0,0,.12);
+}
+
+/* ลดขนาดฟอนต์ใน popup ลงทะเบียน */
+.reg-lux{font-size:13px;}
+.reg-lux label{font-size:11px;}
+.reg-lux input,.reg-lux select,.reg-lux textarea{font-size:13px;}
+.reg-lux .text-lg{font-size:16px !important;}
+.reg-lux .text-xl{font-size:18px !important;}
+
+
+/* ป้าย "จองไว้" ต่อท้าย SEAT */
+.seat-resv{
+  font-size:10px;
+  font-weight:900;
+  color:#64748b;
+  letter-spacing:0;
+  padding:2px 8px;
+  border-radius:999px;
+  border:1px solid rgba(226,232,240,.9);
+  background:rgba(248,250,252,.95);
+  margin-left:6px;
+}
+
+/* ปุ่ม โต๊ะก่อนหน้า / โต๊ะถัดไป */
+.nav-table-btn{
+  font-size:10px;          /* จากเดิมใหญ่ → เล็กลง */
+  font-weight:800;
+  padding:10px 14px;       /* ลดความสูง */
+  border-radius:14px;
+  letter-spacing:.02em;
+}
+/* หัวข้อใหญ่ */
+h1, .title, .lux-title{
+  font-weight: 800;
+  letter-spacing: .01em;
+}
+
+/* ปุ่ม */
+button{
+  font-weight: 700;
+}
+
+/* label / badge */
+label, .pill, .seat-resv{
+  font-weight: 600;
+}
+
+
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <div class="fixed top-0 w-full bg-white/95 backdrop-blur z-50 py-4 shadow-sm border-b border-pink-100">
+    <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between px-6 gap-4">
+      <div class="text-center md:text-left">
+        <h1 class="text-3xl text-pink-600 wedding-name">Palmy & Sumo</h1>
+
+        <p class="text-xs text-gray-500">25 Jan 2026 • Wintree City Resort</p>
+      </div>
+
+      <div class="flex gap-2 flex-wrap justify-center">
+        <button class="nav-btn" onclick="openRegisterPopup()">
+          <i data-lucide="clipboard-list" width="18"></i> ลงทะเบียน
+        </button>
+
+        <button class="nav-btn" onclick="openWishPopup()">
+          <i data-lucide="heart-handshake" width="18"></i> เขียนอวยพร
+        </button>
+
+        <button class="nav-btn" onclick="openAdminPopup()">
+          <i data-lucide="shield" width="18"></i> แอดมิน
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Map -->
+  <div class="overflow-auto pt-28 pb-20 px-4 flex justify-center bg-gray-50">
+    <div id="venue-map">
+      <div class="map-wrapper">
+        <img class="map-img" src="{{ url_for('static', filename='images/layout.png') }}" alt="Wedding layout">
+        <div id="table-overlay"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    const TABLE_POSITIONS = [
+      { table: 1,  xPct: 0.118622, yPct: 0.433122 },
+      { table: 2,  xPct: 0.308418, yPct: 0.433122 },
+      { table: 3,  xPct: 0.694133, yPct: 0.432535 },
+      { table: 4,  xPct: 0.883929, yPct: 0.433122 },
+      { table: 5,  xPct: 0.118622, yPct: 0.494089 },
+      { table: 6,  xPct: 0.309949, yPct: 0.493503 },
+      { table: 7,  xPct: 0.695663, yPct: 0.494089 },
+      { table: 8,  xPct: 0.885459, yPct: 0.493503 },
+      { table: 9,  xPct: 0.120153, yPct: 0.556815 },
+      { table:10,  xPct: 0.309949, yPct: 0.556815 },
+      { table:11,  xPct: 0.694133, yPct: 0.557401 },
+      { table:12,  xPct: 0.883929, yPct: 0.557401 },
+      { table:13,  xPct: 0.120153, yPct: 0.620127 },
+      { table:14,  xPct: 0.308418, yPct: 0.620713 },
+      { table:15,  xPct: 0.694133, yPct: 0.620713 },
+      { table:16,  xPct: 0.885459, yPct: 0.620127 },
+      { table:17,  xPct: 0.118622, yPct: 0.681681 },
+      { table:18,  xPct: 0.309949, yPct: 0.682267 },
+      { table:19,  xPct: 0.695663, yPct: 0.682853 },
+      { table:20,  xPct: 0.882398, yPct: 0.682267 },
+      { table:21,  xPct: 0.120153, yPct: 0.743820 },
+      { table:22,  xPct: 0.308418, yPct: 0.744406 },
+      { table:23,  xPct: 0.694133, yPct: 0.744993 },
+      { table:24,  xPct: 0.883929, yPct: 0.744406 },
+      { table:25,  xPct: 0.120153, yPct: 0.806546 },
+      { table:26,  xPct: 0.308418, yPct: 0.806546 },
+      { table:27,  xPct: 0.697194, yPct: 0.806546 },
+      { table:28,  xPct: 0.885459, yPct: 0.805960 },
+      { table:29,  xPct: 0.120153, yPct: 0.869858 },
+      { table:30,  xPct: 0.308418, yPct: 0.869858 },
+      { table:31,  xPct: 0.694133, yPct: 0.869858 },
+      { table:32,  xPct: 0.885459, yPct: 0.870445 },
+    ];
+
+    let TABLES = [];
+    let SELECTED_TABLE = null;
+
+    async function loadTables() {
+      const res = await fetch('/api/tables');
+      const data = await res.json();
+      if (data.error) {
+        Swal.fire('Error', data.error, 'error');
+        return;
+      }
+      TABLES = data;
+      render();
+    }
+
+    function render() {
+      const overlay = document.getElementById('table-overlay');
+      overlay.innerHTML = '';
+
+      TABLES.forEach(t => {
+        const tn = Number(t.table_number);
+        const pos = TABLE_POSITIONS.find(p => p.table === tn);
+        if (!pos) return;
+
+        const seats = t.seats || [];
+        const bookedCount = seats.filter(s => (String(s.status||'').toLowerCase()==='booked') && String(s.guest_name||'').trim()).length;
+        const isFull = bookedCount >= 10;
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `table-hotspot ${isFull ? 'table-full' : ''} ${SELECTED_TABLE===tn ? 'table-selected' : ''}`;
+        btn.style.left = `${pos.xPct*100}%`;
+        btn.style.top  = `${pos.yPct*100}%`;
+
+        // เลขโต๊ะ + คำว่า "กด"
+        btn.textContent = '';
+        const num = document.createElement('div');
+        num.textContent = tn;
+        num.style.fontSize = '16px';
+        num.style.fontWeight = '900';
+        num.style.lineHeight = '1';
+
+        const hint = document.createElement('div');
+        hint.className = 'table-tap-hint';
+        hint.textContent = 'กด';
+
+        btn.appendChild(num);
+        btn.appendChild(hint);
+
+        // ป้ายชื่อโต๊ะ
+        const label = document.createElement('div');
+        label.className = 'table-label';
+        label.textContent = (t.table_name && t.table_name.trim().length) ? t.table_name : `โต๊ะ ${tn}`;
+        btn.appendChild(label);
+
+        btn.onclick = () => openTable(tn);
+        overlay.appendChild(btn);
+      });
+    }
+
+    function openTable(tn) {
+      SELECTED_TABLE = tn;
+      render();
+
+      const t = TABLES.find(x => Number(x.table_number)===tn) || {};
+      const seats = (t.seats || []);
+
+      const bookedCount = seats.filter(s => (String(s.status||'').toLowerCase()==='booked') && String(s.guest_name||'').trim()).length;
+      const emptyCount = 10 - bookedCount;
+      const statusText = emptyCount===0 ? 'เต็มแล้ว' : `ว่าง ${emptyCount} ที่`;
+
+      const listHtml = seats.map(s => {
+        const seatId = s.id || '';
+        const seatNo = s.seat_number;
+
+        const name = String(s.guest_name||'').trim();
+        const intro = String(s.guest_intro||'').trim();
+        const reserved = String(s.reserved_for||'').trim();
+
+        const isBooked = String(s.status||'').toLowerCase()==='booked' && name.length;
+        const arrived = s.arrived === true;
+
+        const rightPill = isBooked
+          ? (arrived ? `<span class="pill arr">มาถึงแล้ว</span>` : `<span class="pill bad">จองแล้ว</span>`)
+          : (reserved ? `<span class="pill ok">ว่าง</span>` : `<span class="pill ok">ว่าง</span>`);
+
+        let actionBtn = '';
+        if (isBooked) {
+          actionBtn = arrived
+            ? `<button class="lux-btn disabled" disabled>ยืนยันแล้ว</button>`
+            : `<button class="lux-btn arrive"
+                 onclick="confirmArrival('${escapeAttr(seatId)}', ${tn}, ${seatNo})">ยืนยันมาถึง</button>`;
+        } else {
+          actionBtn = seatId
+            ? `<button class="lux-btn reg"
+                 onclick="goRegister(${tn}, '${escapeAttr(seatId)}')">ลงทะเบียน</button>`
+            : `<button class="lux-btn disabled" disabled>ยังไม่พร้อม</button>`;
+        }
+
+        const introHtml = (isBooked && intro)
+          ? `<div class="lux-intro"><span class="tag">✨ ${escapeHtml(intro)}</span></div>`
+          : '';
+
+        const reservedText = (!isBooked && reserved)
+  ? `<span class="seat-resv"> • จองไว้: ${escapeHtml(reserved)}</span>`
+  : '';
+
+const nameHtml = name ? escapeHtml(name) : ''; // ✅ ว่าง = ไม่แสดงขีด
+
+return `
+  <div class="lux-row">
+    <div class="lux-left">
+      <div class="lux-seat">
+        SEAT ${seatNo}${reservedText}
+      </div>
+
+      ${nameHtml ? `<div class="lux-name">${nameHtml}</div>` : ``}
+      ${introHtml}
+    </div>
+
+    <div class="flex items-center gap-2">
+      ${rightPill}
+      ${actionBtn}
+    </div>
+  </div>
+
+            
+        `;
+      }).join('');
+
+      Swal.fire({
+        title: '',
+        html: `
+          <div class="text-left">
+            <!-- Luxury Header -->
+            <div class="flex items-start justify-between gap-3 mb-3">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-pink-50 flex items-center justify-center shadow-sm border border-pink-100">
+                  <span class="text-2xl">🍽️</span>
+                </div>
+                <div class="min-w-0">
+                  <div class="text-xl font-extrabold text-slate-900 leading-tight truncate">
+                    ${escapeHtml((t.table_name && t.table_name.trim().length) ? t.table_name : `โต๊ะ ${tn}`)}
+                  </div>
+                  <div class="mt-1 flex flex-wrap items-center gap-2">
+                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-600 text-xs font-extrabold shadow-sm">
+                      สถานะ: <span class="text-slate-900">${escapeHtml(statusText)}</span>
+                    </span>
+                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-50 border border-pink-100 text-pink-700 text-xs font-extrabold shadow-sm">
+                      โต๊ะ #${tn}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <button class="w-10 h-10 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition"
+                onclick="Swal.close()" aria-label="close">✕</button>
+            </div>
+
+            <!-- Seats list -->
+            <div class="lux-wrap" style="max-height:55vh; overflow:auto;">
+              ${listHtml}
+            </div>
+
+            <!-- Nav -->
+            <div class="lux-nav">
+              <button id="btnPrev" class="nav-table-btn flex-1 bg-gray-100">◀ โต๊ะก่อนหน้า</button>
+<button id="btnNext" class="nav-table-btn flex-1 bg-gray-100">โต๊ะถัดไป ▶</button>
+
+            </div>
+          </div>
+        `,
+        showConfirmButton:false,
+        showCloseButton:false,
+        willClose:()=>{ SELECTED_TABLE=null; render(); },
+        didOpen:()=>{
+          document.getElementById('btnPrev').onclick=()=>switchTable(tn<=1?32:tn-1);
+          document.getElementById('btnNext').onclick=()=>switchTable(tn>=32?1:tn+1);
+        }
+      });
+    }
+
+    function switchTable(next){
+      Swal.close();
+      setTimeout(()=>openTable(next),0);
+    }
+
+    window.goRegister = (tableNum, seatId) => openRegisterPopup(tableNum, seatId);
+
+    window.confirmArrival = async (seatId, tableNum, seatNo) => {
+      const ok = await Swal.fire({
+        title: `ยืนยันมาถึงงานแล้ว?`,
+        text: `โต๊ะ ${tableNum} ที่นั่ง ${seatNo}`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'ยืนยัน',
+        cancelButtonText: 'ยกเลิก',
+        confirmButtonColor: '#db2777',
+        customClass:{ popup:'rounded-[22px]' }
+      });
+      if (!ok.isConfirmed) return;
+
+      const res = await fetch('/api/arrive', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ seatId })
+      });
+      const out = await res.json();
+      if (out.success) {
+        await loadTables();
+        Swal.fire({title:'สำเร็จ', text:'ยืนยันเรียบร้อย', icon:'success', confirmButtonColor:'#db2777', customClass:{popup:'rounded-[22px]'}})
+          .then(()=>openTable(tableNum));
+      } else {
+        Swal.fire({title:'ผิดพลาด', text:(out.message || out.error || 'ทำรายการไม่สำเร็จ'), icon:'error', confirmButtonColor:'#db2777', customClass:{popup:'rounded-[22px]'}});
+      }
+    };
+
+    function escapeHtml(str){
+      return String(str).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
+        .replaceAll('"','&quot;').replaceAll("'","&#039;");
+    }
+    function escapeAttr(str){
+      return String(str).replaceAll('"','&quot;').replaceAll("'","&#039;");
+    }
+// -----------------------------
+// Popup: Register (Luxury) - ไม่เลือกโต๊ะ/ที่นั่งเป็นค่าเริ่มต้น
+// -----------------------------
+async function openRegisterPopup(preTable=null, preSeatId=null){
+  if(!TABLES || !TABLES.length){
+    await loadTables();
+  }
+
+  const tables = TABLES || [];
+
+  // ✅ ใส่ placeholder "เลือกโต๊ะ" เป็นตัวแรก
+  const tableOptions =
+    `<option value="">— เลือกโต๊ะ —</option>` +
+    tables.map(t=>{
+      const label = (t.table_name && t.table_name.trim())
+        ? t.table_name
+        : `โต๊ะ ${t.table_number}`;
+      return `<option value="${t.table_number}">${escapeHtml(label)}</option>`;
+    }).join('');
+
+  Swal.fire({
+    title: '',
+    html: `
+      <div class="reg-lux text-left">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-12 h-12 rounded-2xl bg-pink-50 flex items-center justify-center shadow-sm border border-pink-100">
+            <span class="text-2xl">📝</span>
+          </div>
+          <div>
+            <div class="text-lg font-extrabold text-gray-900 leading-tight">ลงทะเบียนแขก</div>
+            <div class="text-xs text-gray-500">เลือกโต๊ะและที่นั่งได้เลย</div>
+          </div>
+
+          <div class="ml-auto">
+            <button class="w-10 h-10 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition"
+              onclick="Swal.close()" aria-label="close">✕</button>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-2xl border bg-white shadow-sm grid gap-3">
+          <div>
+            <label class="text-xs font-extrabold text-gray-700">ชื่อ-นามสกุล</label>
+            <input id="reg_name"
+              class="mt-1 w-full px-4 py-3 rounded-2xl border border-gray-200 outline-none focus:ring-4 focus:ring-pink-100 focus:border-pink-300"
+              
+          </div>
+
+          <div>
+            <label class="text-xs font-extrabold text-gray-700">แนะนำตัวเอง</label>
+            <textarea id="reg_intro" rows="3"
+              class="mt-1 w-full px-4 py-3 rounded-2xl border border-gray-200 outline-none focus:ring-4 focus:ring-pink-100 focus:border-pink-300"
+              placeholder="เช่น ตำแหน่ง หรืออะไรก็ได้..."></textarea>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs font-extrabold text-gray-700">โต๊ะ</label>
+              <select id="reg_table"
+                class="mt-1 w-full px-4 py-3 rounded-2xl border border-gray-200 outline-none focus:ring-4 focus:ring-pink-100 focus:border-pink-300">
+                ${tableOptions}
+              </select>
+            </div>
+
+            <div>
+              <label class="text-xs font-extrabold text-gray-700">ที่นั่ง (ว่าง)</label>
+              <select id="reg_seat"
+                class="mt-1 w-full px-4 py-3 rounded-2xl border border-gray-200 outline-none focus:ring-4 focus:ring-pink-100 focus:border-pink-300">
+              </select>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between gap-2">
+            <div id="reg_hint" class="text-xs text-gray-500"></div>
+            <div id="reg_summary"
+              class="text-xs font-extrabold px-3 py-2 rounded-full bg-pink-50 text-pink-700 border border-pink-100">
+              —
+            </div>
+          </div>
+
+          <div class="flex gap-2 mt-1">
+            <button id="reg_cancel" type="button"
+              class="flex-1 px-4 py-3 rounded-2xl font-extrabold bg-slate-100 text-slate-700 border border-slate-200 hover:shadow-sm transition">
+              ยกเลิก
+            </button>
+            <button id="reg_confirm" type="button"
+              class="flex-1 px-4 py-3 rounded-2xl font-extrabold text-white border border-pink-200 hover:shadow-md transition"
+              style="background: linear-gradient(135deg, #db2777 0%, #fb7185 100%);">
+              ยืนยันลงทะเบียน
+            </button>
+          </div>
+        </div>
+
+        <div class="mt-3 text-[11px] text-gray-400 leading-relaxed">
+          * เลือกที่นั่งว่างเท่านั้น (ถ้ามี “จองไว้” ก็ยังลงทะเบียนได้)
+        </div>
+      </div>
+    `,
+    showConfirmButton:false,
+    showCloseButton:false,
+    didOpen: ()=>{
+      const tableSel = document.getElementById('reg_table');
+      const seatSel  = document.getElementById('reg_seat');
+
+      // ✅ ค่าเริ่มต้น: ไม่เลือกโต๊ะ/ที่นั่ง
+      if(preTable) tableSel.value = String(preTable);
+      else tableSel.value = "";
+
+      tableSel.onchange = ()=>rebuildSeatOptions(null);
+      seatSel.onchange  = ()=>updateRegSummary();
+
+      document.getElementById('reg_cancel').onclick = ()=>Swal.close();
+
+      document.getElementById('reg_confirm').onclick = async ()=>{
+        const name = document.getElementById('reg_name').value.trim();
+        const intro = document.getElementById('reg_intro').value.trim();
+        const seatId = document.getElementById('reg_seat').value;
+
+        if(!name || !intro || !seatId){
+          Swal.fire({
+            icon:'warning',
+            title:'กรอกให้ครบก่อนนะ',
+            text:'กรุณากรอกชื่อ + แนะนำตัว + เลือกที่นั่ง',
+            confirmButtonColor:'#db2777',
+            customClass:{popup:'rounded-[22px]'}
+          });
+          return;
+        }
+
+        const res = await fetch('/api/book',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ seatId, name, intro })
+        });
+        const out = await res.json();
+
+        if(!out.success){
+          Swal.fire({
+            icon:'error',
+            title:'จองไม่สำเร็จ',
+            text:(out.message || out.error || 'ลองใหม่อีกครั้ง'),
+            confirmButtonColor:'#db2777',
+            customClass:{popup:'rounded-[22px]'}
+          });
+          return;
+        }
+
+        Swal.fire({
+          icon:'success',
+          title:'สำเร็จ 🎉',
+          text:'ลงทะเบียนเรียบร้อย',
+          confirmButtonColor:'#db2777',
+          customClass:{popup:'rounded-[22px]'}
+        });
+
+        await loadTables();
+      };
+
+      // ✅ สร้างที่นั่งตามโต๊ะที่เลือก (ถ้าไม่มีโต๊ะ จะขึ้น "เลือกโต๊ะก่อน")
+      rebuildSeatOptions(preSeatId);
+      updateRegSummary();
+
+      function updateRegSummary(){
+        const tableVal = tableSel.value;
+        const seatText = seatSel && seatSel.options[seatSel.selectedIndex]
+          ? seatSel.options[seatSel.selectedIndex].textContent
+          : '—';
+
+        if(!tableVal){
+          document.getElementById('reg_summary').textContent = `—`;
+          return;
+        }
+
+        const tableNum = Number(tableVal);
+        const t = TABLES.find(x=>Number(x.table_number)===tableNum) || {};
+        const tLabel = (t.table_name && t.table_name.trim()) ? t.table_name : `โต๊ะ ${tableNum}`;
+
+        document.getElementById('reg_summary').textContent = `${tLabel} • ${seatText}`;
+      }
+    }
+  });
+}
+
+function rebuildSeatOptions(preSeatId=null){
+  const tableVal = document.getElementById('reg_table').value; // string
+  const seatSel = document.getElementById('reg_seat');
+  const hint = document.getElementById('reg_hint');
+
+  seatSel.innerHTML = '';
+
+  // ✅ ยังไม่เลือกโต๊ะ
+  if(!tableVal){
+    const opt = document.createElement('option');
+    opt.value = '';
+    opt.textContent = '— เลือกโต๊ะก่อน —';
+    seatSel.appendChild(opt);
+    seatSel.disabled = true;
+
+    hint.innerHTML = `
+      <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-50 text-slate-600 border border-slate-200 font-extrabold">
+        กรุณาเลือกโต๊ะ
+      </span>
+    `;
+
+    seatSel.dispatchEvent(new Event('change'));
+    return;
+  }
+
+  const tableNum = Number(tableVal);
+  const t = TABLES.find(x=>Number(x.table_number)===tableNum) || {};
+  const available = (t.seats||[])
+    .filter(s => String(s.status||'').toLowerCase()==='available' && s.id);
+
+  // ✅ placeholder ที่นั่ง
+  const ph = document.createElement('option');
+  ph.value = '';
+  ph.textContent = '— เลือกที่นั่ง —';
+  seatSel.appendChild(ph);
+
+  if(!available.length){
+    seatSel.disabled = true;
+    hint.innerHTML = `
+      <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-100 font-extrabold">
+        โต๊ะนี้เต็มแล้ว
+      </span>
+    `;
+
+    seatSel.dispatchEvent(new Event('change'));
+    return;
+  }
+
+  seatSel.disabled = false;
+  available.forEach(s=>{
+    const opt=document.createElement('option');
+    opt.value=s.id;
+
+    const r = String(s.reserved_for||'').trim();
+    opt.textContent = r
+      ? `ที่นั่ง ${s.seat_number} (จองไว้: ${r})`
+      : `ที่นั่ง ${s.seat_number}`;
+
+    seatSel.appendChild(opt);
+  });
+
+  // ✅ ถ้าเปิดมาจากการกดโต๊ะ -> preselect seat
+  if(preSeatId) seatSel.value = String(preSeatId);
+
+  hint.innerHTML = `
+    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 font-extrabold">
+      ว่าง ${available.length} ที่
+    </span>
+  `;
+
+  seatSel.dispatchEvent(new Event('change'));
+}
+
+
+    // -----------------------------
+    // Popup: Wish (Luxury)
+    // -----------------------------
+    function openWishPopup(){
+      Swal.fire({
+        title: '',
+        html: `
+          <div class="text-left">
+            <div class="flex items-start justify-between gap-3 mb-3">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-pink-50 flex items-center justify-center shadow-sm border border-pink-100">
+                  <span class="text-2xl">💌</span>
+                </div>
+                <div class="min-w-0">
+                  <div class="text-xl font-extrabold text-slate-900 leading-tight">
+                    เขียนอวยพรบ่าวสาว
+                  </div>
+                  <div class="text-xs text-slate-500 mt-1">
+                    ฝากข้อความน่ารัก ๆ ให้ Palmy &amp; Sumo 💍
+                  </div>
+                </div>
+              </div>
+
+              <button class="w-10 h-10 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition"
+                onclick="Swal.close()" aria-label="close">✕</button>
+            </div>
+
+            <div class="p-4 rounded-2xl border bg-white shadow-sm">
+              <div class="grid gap-3">
+                <div>
+                  <label class="text-xs font-extrabold text-gray-700">ชื่อ</label>
+                  <input id="wish_name"
+                    class="mt-1 w-full px-4 py-3 rounded-2xl border border-gray-200 outline-none focus:ring-4 focus:ring-pink-100 focus:border-pink-300"
+                    placeholder="เช่น คุณสมหญิง / เพื่อนเจ้าสาว">
+                </div>
+
+                <div>
+                  <div class="flex items-center justify-between">
+                    <label class="text-xs font-extrabold text-gray-700">คำอวยพร</label>
+                    <div id="wish_count" class="text-[11px] font-extrabold text-slate-400">0/250</div>
+                  </div>
+                  <textarea id="wish_msg" rows="5"
+                    class="mt-1 w-full px-4 py-3 rounded-2xl border border-gray-200 outline-none focus:ring-4 focus:ring-pink-100 focus:border-pink-300"
+                    placeholder="ตัวอย่าง: ขอให้รักกันยืนยาว มีความสุขมาก ๆ นะคะ/ครับ ✨"></textarea>
+
+                  <div class="mt-2 flex flex-wrap gap-2">
+                    <button type="button" class="px-3 py-2 rounded-full text-xs font-extrabold bg-white border border-slate-200 shadow-sm hover:shadow transition"
+                      onclick="fillWish('ขอให้รักกันหวานชื่นตลอดไป มีความสุขมาก ๆ นะคะ 💖')">หวานๆ</button>
+
+                    <button type="button" class="px-3 py-2 rounded-full text-xs font-extrabold bg-white border border-slate-200 shadow-sm hover:shadow transition"
+                      onclick="fillWish('ขอให้ชีวิตคู่ราบรื่น งานรุ่ง เงินปัง สุขภาพแข็งแรงนะครับ/ค่ะ ✨')">มงคล</button>
+
+                    <button type="button" class="px-3 py-2 rounded-full text-xs font-extrabold bg-white border border-slate-200 shadow-sm hover:shadow transition"
+                      onclick="fillWish('ยินดีด้วยมาก ๆ นะ 💍 ขอให้หัวเราะด้วยกันทุกวันเลย 😊')">เพื่อนๆ</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-4 flex gap-2">
+                <button id="wish_cancel" type="button"
+                  class="flex-1 px-4 py-3 rounded-2xl font-extrabold bg-slate-100 text-slate-700 border border-slate-200 hover:shadow-sm transition">
+                  ยกเลิก
+                </button>
+
+                <button id="wish_send" type="button"
+                  class="flex-1 px-4 py-3 rounded-2xl font-extrabold text-white border border-pink-200 hover:shadow-md transition"
+                  style="background: linear-gradient(135deg, #db2777 0%, #fb7185 100%);">
+                  ส่งคำอวยพร 💗
+                </button>
+              </div>
+            </div>
+
+            <div class="mt-3 text-[11px] text-slate-400 leading-relaxed">
+              * ข้อความจะถูกบันทึกไว้ให้บ่าวสาวอ่านภายหลัง
+            </div>
+          </div>
+        `,
+        showConfirmButton:false,
+        showCloseButton:false,
+        didOpen: ()=>{
+          const nameEl = document.getElementById('wish_name');
+          const msgEl  = document.getElementById('wish_msg');
+          const countEl= document.getElementById('wish_count');
+
+          window.fillWish = (text)=>{
+            msgEl.value = text;
+            msgEl.dispatchEvent(new Event('input'));
+            msgEl.focus();
+          };
+
+          const updateCount = ()=>{
+            const n = msgEl.value.length;
+            countEl.textContent = `${n}/250`;
+            if(n > 250) countEl.classList.add('text-rose-600');
+            else countEl.classList.remove('text-rose-600');
+          };
+          msgEl.addEventListener('input', updateCount);
+          updateCount();
+
+          document.getElementById('wish_cancel').onclick = ()=>Swal.close();
+
+          document.getElementById('wish_send').onclick = async ()=>{
+            const name = nameEl.value.trim();
+            const message = msgEl.value.trim();
+
+            if(!name || !message){
+              Swal.fire({icon:'warning', title:'กรอกให้ครบก่อนนะ', text:'กรุณากรอกชื่อและคำอวยพร', confirmButtonColor:'#db2777', customClass:{popup:'rounded-[22px]'}});
+              return;
+            }
+            if(message.length > 250){
+              Swal.fire({icon:'warning', title:'ยาวไปนิดนึง', text:'จำกัดไม่เกิน 250 ตัวอักษรนะคะ/ครับ', confirmButtonColor:'#db2777', customClass:{popup:'rounded-[22px]'}});
+              return;
+            }
+
+            const res = await fetch('/api/wish', {
+              method:'POST',
+              headers:{'Content-Type':'application/json'},
+              body: JSON.stringify({ name, message })
+            });
+            const out = await res.json();
+
+            if(!out.success){
+              Swal.fire({icon:'error', title:'ส่งไม่สำเร็จ', text:(out.message || out.error || 'ลองใหม่อีกครั้ง'), confirmButtonColor:'#db2777', customClass:{popup:'rounded-[22px]'}});
+              return;
+            }
+
+            Swal.fire({icon:'success', title:'ขอบคุณมาก 💖', text:'ส่งคำอวยพรเรียบร้อย', confirmButtonColor:'#db2777', customClass:{popup:'rounded-[22px]'}});
+          };
+        }
+      });
+    }
+
+    // -----------------------------
+    // Admin popup (รหัส 1234)
+    // - ตั้ง/ลบชื่อโต๊ะ
+    // - แก้ข้อมูลแขก (ชื่อ/แนะนำตัว/เงินช่วยเหลือ)
+    // - ตั้ง/ลบ จองไกด์/กันที่นั่ง
+    // -----------------------------
+    async function openAdminPopup(){
+      const pw = await Swal.fire({
+        title: 'แอดมิน',
+        input: 'password',
+        inputLabel: 'ใส่รหัสแอดมิน',
+        
+        showCancelButton: true,
+        confirmButtonText: 'เข้าสู่ระบบ',
+        confirmButtonColor: '#db2777',
+        customClass:{ popup:'rounded-[22px]' }
+      });
+      if(!pw.isConfirmed) return;
+
+      const res = await fetch('/api/admin/login',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ password: pw.value })
+      });
+      const out = await res.json();
+      if(!out.success){
+        Swal.fire({title:'ผิดพลาด', text:(out.message || 'เข้าสู่ระบบไม่สำเร็จ'), icon:'error', confirmButtonColor:'#db2777', customClass:{popup:'rounded-[22px]'}});
+        return;
+      }
+
+      await loadTables();
+      adminPanel();
+    }
+
+function adminPanel(){
+  Swal.fire({
+    title: '',
+    html: `
+      <div class="text-left">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-xl">🛠️</div>
+          <div>
+            <div class="text-xl font-extrabold">Admin Panel</div>
+            <div class="text-xs text-gray-500">จัดการผังโต๊ะ & แขก</div>
+          </div>
+        </div>
+
+        <div class="grid gap-3">
+          <button class="admin-card" onclick="adminTableManager()">🍽️ จัดการชื่อโต๊ะ</button>
+          <button class="admin-card" onclick="adminSeatManager()">🪑 จัดการที่นั่ง / จองไกด์</button>
+          <button class="admin-card" onclick="adminGuestManager()">👤 แก้ข้อมูลแขก</button>
+          <button class="admin-card" onclick="adminStats()">📊 แดชบอร์ดสรุป</button>
+
+        </div>
+      </div>
+    `,
+    showConfirmButton:false,
+    showCloseButton:true,
+    customClass:{ popup:'rounded-[22px]' }
+  });
+}
+
+function adminTableManager(){
+  const options = TABLES.map(t =>
+    `<option value="${t.table_number}">${t.table_name || 'โต๊ะ '+t.table_number}</option>`
+  ).join('');
+
+  Swal.fire({
+    title:'🍽️ จัดการชื่อโต๊ะ',
+    html:`
+      <select id="adm_table" class="swal2-select">${options}</select>
+      <input id="adm_name" class="swal2-input" placeholder="เช่น VIP เจ้าบ่าว">
+      <button id="save" class="swal2-confirm swal2-styled">บันทึก</button>
+    `,
+    showConfirmButton:false,
+    didOpen:()=>{
+      const sel=document.getElementById('adm_table');
+      const inp=document.getElementById('adm_name');
+
+      const sync=()=>{
+        const t=TABLES.find(x=>x.table_number==sel.value)||{};
+        inp.value=t.table_name||'';
+      };
+      sel.onchange=sync; sync();
+
+      document.getElementById('save').onclick=async()=>{
+        await fetch('/api/admin/set_table_name',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({table_number:sel.value,table_name:inp.value})
+        });
+        await loadTables();
+        Swal.fire('สำเร็จ','บันทึกแล้ว','success').then(adminPanel);
+      };
+    }
+  });
+}
+
+function adminSeatManager(){
+  const tOpt = TABLES.map(t=>`<option value="${t.table_number}">${t.table_name||'โต๊ะ '+t.table_number}</option>`).join('');
+
+  Swal.fire({
+    title:'🪑 จัดการที่นั่ง',
+    html:`
+      <select id="t" class="swal2-select">${tOpt}</select>
+      <select id="s" class="swal2-select"></select>
+      <input id="r" class="swal2-input" placeholder="จองไว้ให้...">
+      <button id="save" class="swal2-confirm swal2-styled">บันทึก</button>
+    `,
+    showConfirmButton:false,
+    didOpen:()=>{
+      const tSel=document.getElementById('t');
+      const sSel=document.getElementById('s');
+      const rInp=document.getElementById('r');
+
+      const build=()=>{
+        const t=TABLES.find(x=>x.table_number==tSel.value)||{};
+        sSel.innerHTML='';
+        (t.seats||[]).forEach(s=>{
+          const opt=document.createElement('option');
+          opt.value=s.id;
+          opt.textContent=`ที่นั่ง ${s.seat_number}`;
+          sSel.appendChild(opt);
+        });
+      };
+      tSel.onchange=build; build();
+
+      document.getElementById('save').onclick=async()=>{
+        await fetch('/api/admin/seat/reserve',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({seat_id:sSel.value,reserved_for:rInp.value})
+        });
+        await loadTables();
+        Swal.fire('สำเร็จ','บันทึกแล้ว','success').then(adminPanel);
+      };
+    }
+  });
+}
+
+function adminGuestManager(){
+  const tOpt = TABLES.map(t=>`<option value="${t.table_number}">${t.table_name||'โต๊ะ '+t.table_number}</option>`).join('');
+
+  Swal.fire({
+    title:'👤 แก้ข้อมูลแขก',
+    html:`
+      <select id="t" class="swal2-select">${tOpt}</select>
+      <select id="s" class="swal2-select"></select>
+      <input id="n" class="swal2-input" placeholder="ชื่อ">
+      <textarea id="i" class="swal2-textarea" placeholder="แนะนำตัว"></textarea>
+      <input id="g" class="swal2-input" placeholder="เงินช่วยเหลือ">
+      <button id="save" class="swal2-confirm swal2-styled">บันทึก</button>
+    `,
+    showConfirmButton:false,
+    didOpen:()=>{
+      const tSel=document.getElementById('t');
+      const sSel=document.getElementById('s');
+      const n=document.getElementById('n');
+      const i=document.getElementById('i');
+      const g=document.getElementById('g');
+      let gid=null;
+
+      const build=()=>{
+        const t=TABLES.find(x=>x.table_number==tSel.value)||{};
+        sSel.innerHTML='';
+        (t.seats||[]).forEach(s=>{
+          if(s.guest_id){
+            const opt=document.createElement('option');
+            opt.value=s.guest_id;
+            opt.textContent=`ที่นั่ง ${s.seat_number} • ${s.guest_name}`;
+            sSel.appendChild(opt);
+          }
+        });
+        sync();
+      };
+      const sync=()=>{
+        const t=TABLES.find(x=>x.table_number==tSel.value)||{};
+        const s=(t.seats||[]).find(x=>x.guest_id==sSel.value)||{};
+        gid=s.guest_id;
+        n.value=s.guest_name||'';
+        i.value=s.guest_intro||'';
+        g.value=s.guest_gift_amount||'';
+      };
+
+      tSel.onchange=build;
+      sSel.onchange=sync;
+      build();
+
+      document.getElementById('save').onclick=async()=>{
+        await fetch('/api/admin/guest/update',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({guest_id:gid,name:n.value,intro:i.value,gift_amount:g.value})
+        });
+        await loadTables();
+        Swal.fire('สำเร็จ','บันทึกแล้ว','success').then(adminPanel);
+      };
+    }
+  });
+}
+
+async function adminStats(){
+  const r = await fetch('/api/admin/stats');
+  const o = await r.json();
+
+  if(!o.success){
+    Swal.fire({icon:'error', title:'โหลดสถิติไม่สำเร็จ', text:(o.error||o.message||''), confirmButtonColor:'#db2777'});
+    return;
+  }
+
+  const pct = o.capacity ? Math.round((o.booked_count / o.capacity) * 100) : 0;
+
+  Swal.fire({
+    title: '',
+    html: `
+      <div class="text-left">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-xl">📊</div>
+          <div>
+            <div class="text-xl font-extrabold">สรุปสถิติแขก</div>
+            <div class="text-xs text-gray-500">ดูเฉพาะแอดมิน</div>
+          </div>
+        </div>
+
+        <div class="grid gap-2">
+          <div class="p-3 rounded-2xl border bg-white shadow-sm flex items-center justify-between">
+            <div class="font-extrabold text-slate-700">ลงทะเบียนแล้ว</div>
+            <div class="text-2xl font-extrabold text-slate-900">${o.booked_count}</div>
+          </div>
+
+          <div class="p-3 rounded-2xl border bg-white shadow-sm flex items-center justify-between">
+            <div class="font-extrabold text-slate-700">มาถึงแล้ว</div>
+            <div class="text-2xl font-extrabold text-slate-900">${o.arrived_count}</div>
+          </div>
+
+          <div class="p-3 rounded-2xl border bg-white shadow-sm flex items-center justify-between">
+            <div class="font-extrabold text-slate-700">เขียนอวยพร</div>
+            <div class="text-2xl font-extrabold text-slate-900">${o.wish_count}</div>
+          </div>
+
+          <div class="p-3 rounded-2xl border bg-white shadow-sm">
+            <div class="flex items-center justify-between">
+              <div class="font-extrabold text-slate-700">ความคืบหน้า</div>
+              <div class="text-sm font-extrabold text-slate-900">${pct}%</div>
+            </div>
+            <div class="mt-2 h-2 rounded-full bg-slate-100 overflow-hidden">
+              <div style="width:${pct}%" class="h-2 bg-pink-500"></div>
+            </div>
+            <div class="mt-2 text-xs text-slate-500">
+              ว่างอยู่ <b>${o.available_count}</b> / ทั้งหมด <b>${o.capacity}</b>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-3 flex gap-2">
+          <button id="btnBack" class="flex-1 px-4 py-3 rounded-2xl font-extrabold bg-slate-100 border border-slate-200">
+            กลับหน้าแอดมิน
+          </button>
+          <button id="btnRefresh" class="flex-1 px-4 py-3 rounded-2xl font-extrabold text-white"
+            style="background:linear-gradient(135deg,#db2777 0%, #fb7185 100%);">
+            รีเฟรช
+          </button>
+        </div>
+      </div>
+    `,
+    showConfirmButton:false,
+    showCloseButton:true,
+    didOpen: ()=>{
+      document.getElementById('btnBack').onclick = ()=>{ Swal.close(); adminPanel(); };
+      document.getElementById('btnRefresh').onclick = ()=>{ Swal.close(); adminStats(); };
+    }
+  });
+}
+
+
+    // start
+    loadTables();
+  </script>
+</body>
+</html>
