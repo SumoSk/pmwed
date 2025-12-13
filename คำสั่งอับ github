@@ -3,16 +3,26 @@ git commit -m "อัปเดตโค้ดทั้งหมด"
 git push origin main
 
 
+# 1) เข้าโฟลเดอร์โปรเจกต์
 cd /home/sumoskb/pmwed
 
-git status
+# 2) ดึงโค้ดล่าสุดจาก GitHub
 git pull
 
-git branch
-git pull origin main
+# 3) activate virtualenv (สำคัญมาก)
+source /home/sumoskb/.virtualenvs/pmwed/bin/activate
 
-# ถ้ามี venv อยู่แล้ว ให้ activate ก่อน (ตัวอย่างชื่อ venv)
-source ~/.virtualenvs/<ชื่อเวนฟ์>/bin/activate
+# 4) อัปเดต pip
+pip install --upgrade pip
 
+# 5) ติดตั้ง dependencies ทั้งหมด
 pip install -r requirements.txt
 
+# 6) เช็คว่า supabase import ได้จริง
+python -c "from supabase import create_client, Client; print('SUPABASE OK')"
+
+# 7) เช็ค python / pip ที่ใช้อยู่ (ไว้ดูตอนมีปัญหา)
+which python
+python -V
+which pip
+pip -V

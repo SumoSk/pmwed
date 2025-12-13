@@ -27,9 +27,6 @@ def admin_required(fn):
     @wraps(fn)
     def wrapper(*args, **kwargs):
         if not session.get("is_admin"):
-            # สำหรับ popup/admin API ให้ตอบเป็น JSON (ไม่ redirect)
-            if request.path.startswith("/api/"):
-                return jsonify({"success": False, "message": "unauthorized"}), 401
             return jsonify({"success": False, "message": "unauthorized"}), 401
         return fn(*args, **kwargs)
     return wrapper
@@ -65,12 +62,11 @@ def api_admin_logout():
 
 # ---------------------------
 # API: tables summary
-# returns: [{table_number, table_name, seats:[{id, seat_number, status, guest_id, guest_name, guest_intro, guest_gift_amount, arrived}]}]
+# returns: [{table_number, table_name, seats:[{id, seat_number, status, guest_id, guest_name, guest_intro, guest_gift_amount, arrived, reserved_for}]}]
 # ---------------------------
 @app.route("/api/tables", methods=["GET"])
 def api_tables():
     try:
-        # ดึงข้อมูลโต๊ะ + ที่นั่ง + แขก
         resp = (
             supabase
             .table("tables")
@@ -102,7 +98,7 @@ def api_tables():
                     "status": s.get("status") or "available",
                     "arrived": bool(s.get("arrived") or False),
 
-                    # 🆕 จองไกด์ / กันที่นั่ง
+                    # กันที่นั่ง/จองไกด์
                     "reserved_for": s.get("reserved_for") or "",
 
                     # ข้อมูลแขก (ถ้ามี)
@@ -124,6 +120,10 @@ def api_tables():
         return jsonify({"error": str(e)}), 500
 
 
+# ---------------------------
+# API: book seat (RPC)
+# expects: {seatId, name, intro}
+# ---------------------------
 @app.route("/api/book", methods=["POST"])
 def api_book():
     try:
@@ -200,7 +200,41 @@ def api_wish():
 
 
 # ---------------------------
-# ADMIN APIs
+# ✅ API: wishes list (หน้าเว็บใช้โหลดโชว์)
+# GET /api/wishes  -> {success, wishes:[...]}
+# ---------------------------
+@app.route("/api/wishes", methods=["GET"])
+def api_wishes():
+    try:
+        # พยายาม order ด้วย created_at ก่อน (ถ้าตารางมี)
+        try:
+            resp = (
+                supabase
+                .table("wishes")
+                .select("id,name,message,created_at")
+                .order("created_at", desc=True)
+                .limit(50)
+                .execute()
+            )
+            return jsonify({"success": True, "wishes": resp.data or []})
+        except Exception:
+            # fallback ถ้าไม่มี created_at
+            resp = (
+                supabase
+                .table("wishes")
+                .select("id,name,message")
+                .order("id", desc=True)
+                .limit(50)
+                .execute()
+            )
+            return jsonify({"success": True, "wishes": resp.data or []})
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+# ---------------------------
+# ADMIN: set table name
 # ---------------------------
 @app.route("/api/admin/set_table_name", methods=["POST"])
 @admin_required
@@ -219,6 +253,9 @@ def api_admin_set_table_name():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
+# ---------------------------
+# ADMIN: update guest
+# ---------------------------
 @app.route("/api/admin/guest/update", methods=["POST"])
 @admin_required
 def api_admin_update_guest():
@@ -249,46 +286,10 @@ def api_admin_update_guest():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
-@app.route("/admin/export.csv")
-@admin_required
-def export_csv():
-    """
-    CSV สำหรับแอดมิน: รวมชื่อโต๊ะ/ที่นั่ง/สถานะ/มาถึง/ชื่อ/แนะนำตัว/เงินช่วยเหลือ
-    """
-    try:
-        resp = (
-            supabase
-            .table("tables")
-            .select("table_number, table_name, seats(seat_number, status, arrived, guest_id, guests(name, intro, gift_amount))")
-            .order("table_number")
-            .execute()
-        )
-
-        rows = ["table_number,table_name,seat_number,status,arrived,guest_name,guest_intro,guest_gift_amount"]
-        for t in resp.data or []:
-            tn = t.get("table_number")
-            tname = (t.get("table_name") or "").replace('"', '""')
-            seats = sorted(t.get("seats") or [], key=lambda x: x.get("seat_number") or 0)
-            for s in seats:
-                g = s.get("guests") or {}
-                name = (g.get("name") or "").replace('"', '""')
-                intro = (g.get("intro") or "").replace('"', '""')
-                gift = g.get("gift_amount", "")
-                arrived = "true" if (s.get("arrived") is True) else "false"
-                rows.append(f'{tn},"{tname}",{s.get("seat_number")},{s.get("status")},{arrived},"{name}","{intro}","{gift}"')
-
-        csv_text = "\n".join(rows)
-        return Response(
-            csv_text,
-            mimetype="text/csv",
-            headers={"Content-Disposition": "attachment; filename=guest_list.csv"}
-        )
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
+# ---------------------------
+# ADMIN: reserve seat tag (กันที่นั่ง)
+# expects: {seat_id, reserved_for}
+# ---------------------------
 @app.route("/api/admin/seat/reserve", methods=["POST"])
 @admin_required
 def api_admin_seat_reserve():
@@ -322,6 +323,9 @@ def api_admin_seat_reserve():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
+# ---------------------------
+# ADMIN: stats
+# ---------------------------
 @app.route("/api/admin/stats", methods=["GET"])
 @admin_required
 def api_admin_stats():
@@ -351,17 +355,69 @@ def api_admin_stats():
         arrived_count = arrived.count or 0
         wish_count = wishes.count or 0
 
+        capacity = 320
+
         return jsonify({
             "success": True,
             "booked_count": booked_count,
             "arrived_count": arrived_count,
             "wish_count": wish_count,
-            "capacity": 320,
-            "available_count": 320 - booked_count
+            "capacity": capacity,
+            "available_count": max(0, capacity - booked_count)
         })
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
 
+# ---------------------------
+# ADMIN: export CSV
+# ---------------------------
+@app.route("/admin/export.csv")
+@admin_required
+def export_csv():
+    """
+    CSV สำหรับแอดมิน: รวมชื่อโต๊ะ/ที่นั่ง/สถานะ/มาถึง/ชื่อ/แนะนำตัว/เงินช่วยเหลือ
+    """
+    try:
+        resp = (
+            supabase
+            .table("tables")
+            .select(
+                "table_number, table_name, "
+                "seats(seat_number, status, arrived, guest_id, guests(name, intro, gift_amount))"
+            )
+            .order("table_number")
+            .execute()
+        )
+
+        rows = ["table_number,table_name,seat_number,status,arrived,guest_name,guest_intro,guest_gift_amount"]
+        for t in resp.data or []:
+            tn = t.get("table_number")
+            tname = (t.get("table_name") or "").replace('"', '""')
+            seats = sorted(t.get("seats") or [], key=lambda x: x.get("seat_number") or 0)
+
+            for s in seats:
+                g = s.get("guests") or {}
+                name = (g.get("name") or "").replace('"', '""')
+                intro = (g.get("intro") or "").replace('"', '""')
+                gift = g.get("gift_amount", "")
+                arrived = "true" if (s.get("arrived") is True) else "false"
+                rows.append(
+                    f'{tn},"{tname}",{s.get("seat_number")},{s.get("status")},{arrived},"{name}","{intro}","{gift}"'
+                )
+
+        csv_text = "\n".join(rows)
+        return Response(
+            csv_text,
+            mimetype="text/csv",
+            headers={"Content-Disposition": "attachment; filename=guest_list.csv"}
+        )
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# ---------------------------
+# Run (เหลือครั้งเดียวท้ายไฟล์)
+# ---------------------------
 if __name__ == "__main__":
     app.run(debug=True)

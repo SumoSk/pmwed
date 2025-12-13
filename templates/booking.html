@@ -9,73 +9,97 @@
   <title>Palmy & Sumo Wedding Booking</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
+    :root{
+      --gold1:#f7e7b4;
+      --gold2:#d6b35c;
+      --ink:#0f172a;
+    }
+
     body{
       font-family:'Prompt','Segoe UI',sans-serif;
       margin:0;
-      background:#fff;
+      background:
+        radial-gradient(1200px 500px at 50% -120px, rgba(251,113,133,.25), transparent 60%),
+        radial-gradient(900px 420px at 15% 10%, rgba(214,179,92,.20), transparent 55%),
+        linear-gradient(180deg, #fbfbfd 0%, #f8fafc 45%, #fbfbfd 100%);
       padding:10px;
-      padding-bottom:120px;
+      padding-bottom:170px; /* ✅ เผื่อ Wish Wall + ปุ่มล่าง */
       font-size:14px;
+      color:var(--ink);
     }
 
-    /* ===== Header buttons (compact) ===== */
+    /* ===== Buttons ===== */
     .nav-btn{
-      background:#d1fae5;
-      color:#065f46;
+      background:rgba(255,255,255,.55);
+      color:#0f172a;
       padding:6px 10px;
-      border-radius:12px;
+      border-radius:999px;
       font-size:12px;
-      font-weight:800;
-      border:1px solid #a7f3d0;
-      box-shadow:0 1px 3px rgba(0,0,0,.08);
+      font-weight:400;
+      border:1px solid rgba(226,232,240,.95);
+      box-shadow:0 10px 30px rgba(15,23,42,.08);
       display:flex;
       align-items:center;
       gap:6px;
       white-space:nowrap;
       -webkit-tap-highlight-color:transparent;
       transition:.12s;
+      backdrop-filter: blur(10px);
     }
-    .nav-btn:hover{ transform:translateY(-1px); box-shadow:0 3px 10px rgba(0,0,0,.10); }
+    .nav-btn:hover{ transform:translateY(-1px); box-shadow:0 16px 44px rgba(15,23,42,.10); }
     .no-scrollbar::-webkit-scrollbar{ display:none; }
     .no-scrollbar{ -ms-overflow-style:none; scrollbar-width:none; }
 
     @media (max-width:640px){
-      .nav-btn{ padding:5px 8px; font-size:11px; border-radius:10px; }
+      .nav-btn{ padding:5px 8px; font-size:11px; }
       .nav-btn i{ width:14px !important; height:14px !important; }
       .swal2-popup{width:95vw !important;margin:0 !important;}
     }
 
-    /* ===== Map ===== */
+    /* ===== Map container ===== */
     #venue-map{
       width:min(784px,95vw);
       margin:0 auto;
-      border-radius:12px;
+      border-radius:20px;
       overflow:hidden;
-      box-shadow:0 0 20px rgba(0,0,0,0.10);
-      background:#fff;
+      background:rgba(255,255,255,.85);
+      border:1px solid rgba(226,232,240,.9);
+      box-shadow:0 22px 70px rgba(15,23,42,.12);
+      position:relative;
     }
+    /* luxury rim */
+    #venue-map:before{
+      content:"";
+      position:absolute; inset:0;
+      border-radius:20px;
+      pointer-events:none;
+      border:1px solid rgba(214,179,92,.35);
+      box-shadow: inset 0 0 0 1px rgba(247,231,180,.25);
+    }
+
     .map-wrapper{position:relative;width:100%;}
     .map-img{width:100%;height:auto;display:block;user-select:none;-webkit-user-drag:none;}
     #table-overlay{position:absolute;inset:0;z-index:20;}
 
-    /* ===== TABLE HOTSPOT (small + transparent) ===== */
+    /* ===== TABLE HOTSPOT ===== */
     .table-hotspot{
       position:absolute;
       transform:translate(-50%,-50%);
       cursor:pointer;
       width:44px;height:44px;border-radius:999px;
-      background:rgba(255,255,255,.55);
+      background:rgba(255,255,255,.58);
       border:1.5px solid rgba(16,185,129,.90);
-      box-shadow:0 4px 10px rgba(15,23,42,.12);
-      backdrop-filter: blur(4px);
+      box-shadow:0 6px 16px rgba(15,23,42,.14);
+      backdrop-filter: blur(6px);
       display:flex;flex-direction:column;align-items:center;justify-content:center;
       color:#065f46;
-      font-weight:900;
+      font-weight:400;
       padding:0;
       -webkit-tap-highlight-color:transparent;
       transition:.12s;
@@ -91,12 +115,12 @@
       transform:translateX(-50%);
       padding:2px 6px;
       font-size:8px;
-      font-weight:800;
+      font-weight:400;
       border-radius:999px;
-      background:rgba(255,255,255,.85);
+      background:rgba(255,255,255,.88);
       border:1px solid rgba(226,232,240,.90);
       color:#0f172a;
-      box-shadow:0 2px 6px rgba(15,23,42,.10);
+      box-shadow:0 2px 8px rgba(15,23,42,.10);
       pointer-events:none;
       white-space:nowrap;
       max-width:92px;
@@ -107,7 +131,7 @@
     .table-full{ border-color:rgba(225,29,72,.92); color:rgba(127,29,29,.95); }
     .table-selected{
       border-color:rgba(219,39,119,.95);
-      box-shadow:0 0 0 6px rgba(236,72,153,.14), 0 6px 14px rgba(15,23,42,.14);
+      box-shadow:0 0 0 6px rgba(236,72,153,.14), 0 8px 18px rgba(15,23,42,.16);
     }
 
     @media (max-width:640px){
@@ -124,6 +148,149 @@
     }
     .swal2-html-container{ margin:0 !important; }
 
+    /* ===== Wish Wall (ท้ายหน้า) ===== */
+    .wish-wall{
+      width:min(784px,95vw);
+      margin:10px auto 0;
+      border-radius:20px;
+      overflow:hidden;
+      background:rgba(255,255,255,.78);
+      border:1px solid rgba(226,232,240,.9);
+      box-shadow:0 22px 70px rgba(15,23,42,.10);
+      backdrop-filter: blur(10px);
+      position:relative;
+    }
+    .wish-wall:before{
+      content:"";
+      position:absolute; inset:0;
+      border-radius:20px;
+      pointer-events:none;
+      border:1px solid rgba(214,179,92,.28);
+      box-shadow: inset 0 0 0 1px rgba(247,231,180,.20);
+    }
+
+    .wish-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      border-bottom:1px solid rgba(226,232,240,.85);
+      background:linear-gradient(180deg, rgba(255,255,255,.85) 0%, rgba(255,247,251,.75) 100%);
+    }
+    .wish-title{
+      display:flex;
+      align-items:baseline;
+      gap:8px;
+      min-width:0;
+    }
+    .wish-title .brand{
+      font-family:'Playfair Display', serif;
+      font-size:12px;
+      font-weight:400;
+      letter-spacing:.03em;
+      color:#0f172a;
+      white-space:nowrap;
+    }
+    .wish-title .sub{
+      font-size:9px;
+      font-weight:400;
+      color:#94a3b8;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .wish-refresh{
+      font-size:10px;
+      font-weight:400;
+      padding:5px 10px;
+      border-radius:999px;
+      border:1px solid rgba(226,232,240,.9);
+      background:rgba(255,255,255,.7);
+      box-shadow:0 6px 16px rgba(15,23,42,.08);
+      transition:.12s;
+      backdrop-filter: blur(10px);
+    }
+    .wish-refresh:hover{ transform:translateY(-1px); }
+
+    .wish-body{
+      padding:10px 12px 12px;
+      background:linear-gradient(180deg, rgba(255,255,255,.70) 0%, rgba(251,251,253,.85) 100%);
+    }
+
+    .wish-list{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap:8px;
+      max-height:132px;
+      overflow:auto;
+      padding-right:2px;
+    }
+    @media (min-width:640px){
+      .wish-list{ grid-template-columns: repeat(3, minmax(0,1fr)); max-height:160px; }
+    }
+
+    .wish-card{
+      border:1px solid rgba(226,232,240,.9);
+      background: rgba(255,255,255,.86);
+      border-radius:14px;
+      padding:8px 9px;
+      box-shadow:0 12px 30px rgba(15,23,42,.08);
+      position:relative;
+    }
+    .wish-card:before{
+      content:"";
+      position:absolute; inset:0;
+      border-radius:14px;
+      pointer-events:none;
+      border:1px solid rgba(214,179,92,.18);
+    }
+
+    .wish-msg{
+      font-size:8px;             /* ✅ ตามที่ขอ */
+      font-weight:400;
+      color:#334155;
+      line-height:1.3;
+      display:-webkit-box;
+      -webkit-line-clamp:3;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
+    }
+
+    .wish-meta{
+      margin-top:5px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:6px;
+      font-size:8px;
+      color:#64748b;
+      font-weight:400;
+    }
+    .wish-name{
+      max-width:70%;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .wish-time{ opacity:.85; white-space:nowrap; }
+
+    .wish-empty{
+      grid-column:1/-1;
+      font-size:8px;
+      color:#94a3b8;
+      font-weight:400;
+      padding:10px;
+      text-align:center;
+      border:1px dashed rgba(226,232,240,.9);
+      border-radius:14px;
+      background:rgba(255,255,255,.6);
+    }
+
+    /* ===== Existing luxury styles (คุณเดิม) ===== */
     .lux-wrap{
       background: linear-gradient(180deg, #fff 0%, #fff7fb 55%, #fff 100%);
       border: 1px solid rgba(203, 213, 225, .65);
@@ -145,13 +312,13 @@
       font-size:11px;
       letter-spacing:.06em;
       color:#94a3b8;
-      font-weight:900;
+      font-weight:400;
       text-transform: uppercase;
     }
     .lux-name{
       margin-top:2px;
       font-size:14px;
-      font-weight:900;
+      font-weight:400;
       color:#0f172a;
       line-height:1.2;
       white-space:nowrap;
@@ -162,7 +329,7 @@
       margin-top:3px;
       font-size:11px;
       color:#64748b;
-      font-weight:800;
+      font-weight:400;
       display:flex;
       flex-wrap:wrap;
       align-items:center;
@@ -236,18 +403,6 @@
       cursor:not-allowed;
     }
 
-    .seat-resv{
-      font-size:10px;
-      font-weight:900;
-      color:#64748b;
-      padding:2px 8px;
-      border-radius:999px;
-      border:1px solid rgba(226,232,240,.9);
-      background:rgba(248,250,252,.95);
-      margin-left:6px;
-      letter-spacing:0;
-    }
-
     .lux-nav{
       display:flex; gap:10px; margin-top:12px;
     }
@@ -269,52 +424,72 @@
     .reg-lux input,.reg-lux select,.reg-lux textarea{font-size:13px;}
     .reg-lux .text-lg{font-size:16px !important;}
     .reg-lux .text-xl{font-size:18px !important;}
+
+    /* ===== Floating bottom bar ===== */
+    .bottom-actions{
+      position:fixed;
+      left:50%;
+      bottom:10px;
+      transform:translateX(-50%);
+      z-index:9999;
+
+      display:flex;
+      gap:10px;
+      align-items:center;
+
+      padding:10px 12px;
+      border-radius:999px;
+
+      background:rgba(255,255,255,.34);
+      border:1px solid rgba(226,232,240,.85);
+      backdrop-filter: blur(12px);
+      box-shadow:0 20px 70px rgba(15,23,42,.18);
+
+      max-width:calc(100vw - 24px);
+      overflow-x:auto;
+    }
+    .bottom-actions:before{
+      content:"";
+      position:absolute; inset:0;
+      border-radius:999px;
+      pointer-events:none;
+      border:1px solid rgba(214,179,92,.22);
+      box-shadow: inset 0 0 0 1px rgba(247,231,180,.16);
+    }
+    @media (max-width:640px){
+      .bottom-actions{
+        bottom:10px;
+        gap:8px;
+        padding:8px 10px;
+      }
+    }
   </style>
 </head>
 
 <body>
-  <!-- Header -->
-  <div class="fixed top-0 w-full bg-white/95 backdrop-blur z-50 py-2 shadow-sm border-b border-pink-100">
-    <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between px-6 gap-2 md:gap-4">
-      <div class="text-center md:text-left">
-        <h1 class="text-2xl md:text-3xl text-pink-600 font-extrabold">Palmy & Sumo</h1>
-        <p class="text-xs text-gray-500">25 Jan 2026 • Wintree City Resort</p>
-      </div>
-
-      <div class="flex gap-2 w-full md:w-auto overflow-x-auto md:overflow-visible flex-nowrap md:flex-wrap justify-start md:justify-center no-scrollbar">
-        <button class="nav-btn" onclick="openRegisterPopup()">
-          <i data-lucide="clipboard-list" width="16"></i> ลงทะเบียน
-        </button>
-
-        <button class="nav-btn" onclick="openWishPopup()">
-          <i data-lucide="heart-handshake" width="16"></i> เขียนอวยพร
-        </button>
-
-        <button class="nav-btn" onclick="openAdminPopup()">
-          <i data-lucide="shield" width="16"></i> แอดมิน
-        </button>
-
-        <!-- admin-only -->
-        <button id="btnAdminMode" class="nav-btn" style="display:none" onclick="toggleAdminMode()">
-          <i data-lucide="toggle-right" width="16"></i> Admin: ON
-        </button>
-
-        <button id="btnAdminStats" class="nav-btn" style="display:none" onclick="adminStats()">
-          <i data-lucide="bar-chart-3" width="16"></i> สรุป
-        </button>
-      </div>
+  <!-- ✅ เปิดมาเจอรูปเลย -->
+  <div id="venue-map">
+    <div class="map-wrapper">
+      <img class="map-img" src="{{ url_for('static', filename='images/layout.png') }}" alt="Wedding layout">
+      <div id="table-overlay"></div>
     </div>
   </div>
 
-  <!-- Map -->
-  <div class="overflow-auto pt-20 md:pt-28 pb-20 px-4 flex justify-center bg-gray-50">
-    <div id="venue-map">
-      <div class="map-wrapper">
-        <img class="map-img" src="{{ url_for('static', filename='images/layout.png') }}" alt="Wedding layout">
-        <div id="table-overlay"></div>
+  <!-- ✅ Wish Wall ท้ายหน้า (ต้องมี id="wishList" เพื่อให้ JS ใส่ข้อมูลได้) -->
+  <section class="wish-wall" aria-label="Wish wall">
+    <div class="wish-head">
+      <div class="wish-title">
+        <div class="brand">Palmy &amp; Sumo</div>
+        <div class="sub">WISHES</div>
+      </div>
+      <button class="wish-refresh" type="button" onclick="loadWishes()">รีเฟรช</button>
+    </div>
+    <div class="wish-body">
+      <div id="wishList" class="wish-list">
+        <div class="wish-empty">กำลังโหลด…</div>
       </div>
     </div>
-  </div>
+  </section>
 
   <script>
     lucide.createIcons();
@@ -368,8 +543,8 @@
 
       if(btn){
         btn.innerHTML = ADMIN_MODE
-          ? `<i data-lucide="toggle-right" width="16"></i> Admin: ON`
-          : `<i data-lucide="toggle-left" width="16"></i> Admin: OFF`;
+          ? `<i data-lucide="toggle-right"></i> Admin`
+          : `<i data-lucide="toggle-left"></i> Admin`;
       }
       lucide.createIcons();
     }
@@ -415,8 +590,6 @@
         btn.className = `table-hotspot ${isFull ? 'table-full' : ''} ${SELECTED_TABLE===tn ? 'table-selected' : ''}`;
         btn.style.left = `${pos.xPct*100}%`;
         btn.style.top  = `${pos.yPct*100}%`;
-
-        btn.textContent = '';
 
         const num = document.createElement('div');
         num.className = 'table-num';
@@ -499,18 +672,14 @@
 
         const nameHtml = name ? escapeHtml(name) : '';
 
-        // Admin buttons:
-        // - edit guest (only if booked & guest_id)
         const editGuestBtn = (ADMIN_MODE && isBooked && s.guest_id)
           ? `<button class="lux-btn edit" onclick="editGuest('${escapeAttr(s.guest_id)}', ${tn})">✏️ แก้</button>`
           : '';
 
-        // - reserve seat tag (available seats; allow edit/clear)
         const reserveSeatBtn = (ADMIN_MODE && isAvailable && seatId)
           ? `<button class="lux-btn edit" onclick="editSeatReserve('${escapeAttr(seatId)}', ${tn}, '${escapeAttr(reserved)}')">🏷️ จอง</button>`
           : '';
 
-        // - clear reserve seat tag
         const clearReserveBtn = (ADMIN_MODE && isAvailable && seatId && reserved)
           ? `<button class="lux-btn danger" onclick="clearSeatReserve('${escapeAttr(seatId)}', ${tn})">ล้าง</button>`
           : '';
@@ -634,7 +803,6 @@
 
     // ===== edit guest (admin) =====
     async function editGuest(guestId, tableNum){
-      // find guest from current TABLES
       let guest = null;
       for(const tt of TABLES){
         for(const ss of (tt.seats||[])){
@@ -835,7 +1003,7 @@
               </div>
               <div>
                 <div class="text-lg font-extrabold text-gray-900 leading-tight">ลงทะเบียนแขก</div>
-                <div class="text-xs text-gray-500">เลือกโต๊ะและที่นั่งได้เลย</div>
+                <div class="text-xs text-gray-500">เลือกโต๊ะและที่นั่ง</div>
               </div>
 
               <div class="ml-auto">
@@ -856,7 +1024,7 @@
                 <label class="text-xs font-extrabold text-gray-700">แนะนำตัวเอง</label>
                 <textarea id="reg_intro" rows="3"
                   class="mt-1 w-full px-4 py-3 rounded-2xl border border-gray-200 outline-none focus:ring-4 focus:ring-pink-100 focus:border-pink-300"
-                  placeholder="เช่น ตำแหน่ง หรืออะไรก็ได้..."></textarea>
+                  placeholder="เช่น เพื่อนเจ้าบ่าว / ทีมงาน"></textarea>
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -892,13 +1060,9 @@
                 <button id="reg_confirm" type="button"
                   class="flex-1 px-4 py-3 rounded-2xl font-extrabold text-white border border-pink-200 hover:shadow-md transition"
                   style="background: linear-gradient(135deg, #db2777 0%, #fb7185 100%);">
-                  ยืนยันลงทะเบียน
+                  ยืนยัน
                 </button>
               </div>
-            </div>
-
-            <div class="mt-3 text-[11px] text-gray-400 leading-relaxed">
-              * เลือกที่นั่งว่างเท่านั้น (ถ้ามี “จองไว้” ก็ยังลงทะเบียนได้)
             </div>
           </div>
         `,
@@ -925,7 +1089,7 @@
               Swal.fire({
                 icon:'warning',
                 title:'กรอกให้ครบก่อนนะ',
-                text:'กรุณากรอกชื่อ + แนะนำตัว + เลือกที่นั่ง',
+                text:'ชื่อ + แนะนำตัว + เลือกที่นั่ง',
                 confirmButtonColor:'#db2777',
                 customClass:{popup:'rounded-[22px]'}
               });
@@ -950,15 +1114,14 @@
               return;
             }
 
+            await loadTables();
             Swal.fire({
               icon:'success',
-              title:'สำเร็จ 🎉',
+              title:'สำเร็จ',
               text:'ลงทะเบียนเรียบร้อย',
               confirmButtonColor:'#db2777',
               customClass:{popup:'rounded-[22px]'}
-            });
-
-            await loadTables();
+            }).then(()=>Swal.close());
           };
 
           rebuildSeatOptions(preSeatId);
@@ -1066,10 +1229,10 @@
                 </div>
                 <div class="min-w-0">
                   <div class="text-xl font-extrabold text-slate-900 leading-tight">
-                    เขียนอวยพรบ่าวสาว
+                    เขียนอวยพร
                   </div>
                   <div class="text-xs text-slate-500 mt-1">
-                    ฝากข้อความน่ารัก ๆ ให้ Palmy &amp; Sumo 💍
+                    ฝากข้อความให้ Palmy &amp; Sumo
                   </div>
                 </div>
               </div>
@@ -1084,7 +1247,7 @@
                   <label class="text-xs font-extrabold text-gray-700">ชื่อ</label>
                   <input id="wish_name"
                     class="mt-1 w-full px-4 py-3 rounded-2xl border border-gray-200 outline-none focus:ring-4 focus:ring-pink-100 focus:border-pink-300"
-                    placeholder="เช่น คุณสมหญิง / เพื่อนเจ้าสาว">
+                    placeholder="เช่น เพื่อนเจ้าสาว">
                 </div>
 
                 <div>
@@ -1094,7 +1257,7 @@
                   </div>
                   <textarea id="wish_msg" rows="5"
                     class="mt-1 w-full px-4 py-3 rounded-2xl border border-gray-200 outline-none focus:ring-4 focus:ring-pink-100 focus:border-pink-300"
-                    placeholder="ตัวอย่าง: ขอให้รักกันยืนยาว มีความสุขมาก ๆ นะคะ/ครับ ✨"></textarea>
+                    placeholder="ขอให้รักกันยืนยาว มีความสุขมาก ๆ ✨"></textarea>
                 </div>
               </div>
 
@@ -1107,13 +1270,9 @@
                 <button id="wish_send" type="button"
                   class="flex-1 px-4 py-3 rounded-2xl font-extrabold text-white border border-pink-200 hover:shadow-md transition"
                   style="background: linear-gradient(135deg, #db2777 0%, #fb7185 100%);">
-                  ส่งคำอวยพร 💗
+                  ส่ง
                 </button>
               </div>
-            </div>
-
-            <div class="mt-3 text-[11px] text-slate-400 leading-relaxed">
-              * ข้อความจะถูกบันทึกไว้ให้บ่าวสาวอ่านภายหลัง
             </div>
           </div>
         `,
@@ -1140,11 +1299,11 @@
             const message = msgEl.value.trim();
 
             if(!name || !message){
-              Swal.fire({icon:'warning', title:'กรอกให้ครบก่อนนะ', text:'กรุณากรอกชื่อและคำอวยพร', confirmButtonColor:'#db2777', customClass:{popup:'rounded-[22px]'}});
+              Swal.fire({icon:'warning', title:'กรอกให้ครบ', text:'ชื่อและคำอวยพร', confirmButtonColor:'#db2777', customClass:{popup:'rounded-[22px]'}});
               return;
             }
             if(message.length > 250){
-              Swal.fire({icon:'warning', title:'ยาวไปนิดนึง', text:'จำกัดไม่เกิน 250 ตัวอักษรนะคะ/ครับ', confirmButtonColor:'#db2777', customClass:{popup:'rounded-[22px]'}});
+              Swal.fire({icon:'warning', title:'ยาวไปนิดนึง', text:'ไม่เกิน 250 ตัวอักษร', confirmButtonColor:'#db2777', customClass:{popup:'rounded-[22px]'}});
               return;
             }
 
@@ -1156,11 +1315,18 @@
             const out = await res.json();
 
             if(!out.success){
-              Swal.fire({icon:'error', title:'ส่งไม่สำเร็จ', text:(out.message || out.error || 'ลองใหม่อีกครั้ง'), confirmButtonColor:'#db2777', customClass:{popup:'rounded-[22px]'}});
+              Swal.fire({icon:'error', title:'ส่งไม่สำเร็จ', text:(out.message || out.error || 'ลองใหม่'), confirmButtonColor:'#db2777', customClass:{popup:'rounded-[22px]'}});
               return;
             }
 
-            Swal.fire({icon:'success', title:'ขอบคุณมาก 💖', text:'ส่งคำอวยพรเรียบร้อย', confirmButtonColor:'#db2777', customClass:{popup:'rounded-[22px]'}});
+            await loadWishes();
+            Swal.fire({
+              icon:'success',
+              title:'ขอบคุณ 💖',
+              text:'ส่งเรียบร้อย',
+              confirmButtonColor:'#db2777',
+              customClass:{popup:'rounded-[22px]'}
+            }).then(()=>Swal.close());
           };
         }
       });
@@ -1196,7 +1362,7 @@
 
       ADMIN_MODE = true;
       syncAdminControls();
-      Swal.fire({icon:'success', title:'Admin Mode: ON', text:'กดโต๊ะเพื่อแก้ชื่อโต๊ะ/แก้แขก/จองที่นั่ง/ใส่เงินได้เลย', confirmButtonColor:'#db2777'});
+      Swal.fire({icon:'success', title:'Admin Mode: ON', text:'กดโต๊ะเพื่อแก้ไข', confirmButtonColor:'#db2777'});
       await loadTables();
     }
 
@@ -1221,24 +1387,24 @@
             <div class="flex items-center gap-3 mb-3">
               <div class="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-xl">📊</div>
               <div>
-                <div class="text-xl font-extrabold">สรุปสถิติแขก</div>
-                <div class="text-xs text-gray-500">ดูเฉพาะแอดมิน</div>
+                <div class="text-xl font-extrabold">สรุป</div>
+                <div class="text-xs text-gray-500">แอดมินเท่านั้น</div>
               </div>
             </div>
 
             <div class="grid gap-2">
               <div class="p-3 rounded-2xl border bg-white shadow-sm flex items-center justify-between">
-                <div class="font-extrabold text-slate-700">ลงทะเบียนแล้ว</div>
+                <div class="font-extrabold text-slate-700">ลงทะเบียน</div>
                 <div class="text-2xl font-extrabold text-slate-900">${o.booked_count}</div>
               </div>
 
               <div class="p-3 rounded-2xl border bg-white shadow-sm flex items-center justify-between">
-                <div class="font-extrabold text-slate-700">มาถึงแล้ว</div>
+                <div class="font-extrabold text-slate-700">มาถึง</div>
                 <div class="text-2xl font-extrabold text-slate-900">${o.arrived_count}</div>
               </div>
 
               <div class="p-3 rounded-2xl border bg-white shadow-sm flex items-center justify-between">
-                <div class="font-extrabold text-slate-700">เขียนอวยพร</div>
+                <div class="font-extrabold text-slate-700">อวยพร</div>
                 <div class="text-2xl font-extrabold text-slate-900">${o.wish_count}</div>
               </div>
 
@@ -1251,7 +1417,7 @@
                   <div style="width:${pct}%" class="h-2 bg-pink-500"></div>
                 </div>
                 <div class="mt-2 text-xs text-slate-500">
-                  ว่างอยู่ <b>${o.available_count}</b> / ทั้งหมด <b>${o.capacity}</b>
+                  ว่าง <b>${o.available_count}</b> / ทั้งหมด <b>${o.capacity}</b>
                 </div>
               </div>
             </div>
@@ -1270,8 +1436,86 @@
       });
     }
 
+    // ===== WISH WALL loader =====
+    function formatShortTime(ts){
+      if(!ts) return '';
+      const d = new Date(ts);
+      if(isNaN(d.getTime())) return '';
+      const hh = String(d.getHours()).padStart(2,'0');
+      const mm = String(d.getMinutes()).padStart(2,'0');
+      return `${hh}:${mm}`;
+    }
+
+    async function loadWishes(){
+      const box = document.getElementById('wishList');
+      if(!box) return;
+
+      try{
+        const res = await fetch('/api/wishes'); // ✅ ใช้ endpoint นี้
+        const out = await res.json();
+
+        const items = (out && (out.wishes || out.data || out.items)) || out || [];
+        if(!Array.isArray(items) || items.length === 0){
+          box.innerHTML = `<div class="wish-empty">ยังไม่มีคำอวยพร</div>`;
+          return;
+        }
+
+        const wishes = items.slice().reverse().slice(0, 24);
+
+        box.innerHTML = wishes.map(w=>{
+          const name = (w.name || w.wish_name || 'ไม่ระบุ').toString().trim();
+          const msg  = (w.message || w.wish_msg || '').toString().trim();
+          const t    = formatShortTime(w.created_at || w.createdAt || w.time);
+
+          return `
+            <div class="wish-card">
+              <div class="wish-msg">${escapeHtml(msg)}</div>
+              <div class="wish-meta">
+                <div class="wish-name">${escapeHtml(name)}</div>
+                              </div>
+            </div>
+          `;
+        }).join('');
+      }catch(e){
+        box.innerHTML = `<div class="wish-empty">โหลดคำอวยพรไม่สำเร็จ</div>`;
+      }
+    }
+
     // start
     loadTables();
+    loadWishes();
+    setInterval(loadWishes, 20000);
+
+    // ✅ ทำให้ onclick เรียกได้แน่นอน
+    window.openWishPopup = openWishPopup;
+    window.openRegisterPopup = openRegisterPopup;
+    window.openAdminPopup = openAdminPopup;
+    window.toggleAdminMode = toggleAdminMode;
+    window.adminStats = adminStats;
+    window.loadWishes = loadWishes;
   </script>
+
+  <!-- ✅ Floating bottom bar (ติดล่างจอ) -->
+  <div class="bottom-actions no-scrollbar">
+    <button class="nav-btn" onclick="openRegisterPopup()">
+      <i data-lucide="clipboard-list" width="16"></i> ลงทะเบียน
+    </button>
+
+    <button class="nav-btn" onclick="openWishPopup()">
+      <i data-lucide="heart-handshake" width="16"></i> เขียนอวยพร
+    </button>
+
+    <button class="nav-btn" onclick="openAdminPopup()">
+      <i data-lucide="shield" width="16"></i> แอดมิน
+    </button>
+
+    <button id="btnAdminMode" class="nav-btn" style="display:none" onclick="toggleAdminMode()">
+      <i data-lucide="toggle-right" width="16"></i> Admin
+    </button>
+
+    <button id="btnAdminStats" class="nav-btn" style="display:none" onclick="adminStats()">
+      <i data-lucide="bar-chart-3" width="16"></i> สรุป
+    </button>
+  </div>
 </body>
 </html>
