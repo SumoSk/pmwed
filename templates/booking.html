@@ -1082,19 +1082,19 @@
 
           document.getElementById('reg_confirm').onclick = async ()=>{
             const name = document.getElementById('reg_name').value.trim();
-            const intro = document.getElementById('reg_intro').value.trim();
-            const seatId = document.getElementById('reg_seat').value;
+const intro = document.getElementById('reg_intro').value.trim();
+const seatId = document.getElementById('reg_seat').value;
 
-            if(!name || !intro || !seatId){
-              Swal.fire({
-                icon:'warning',
-                title:'กรอกให้ครบก่อนนะ',
-                text:'ชื่อ + แนะนำตัว + เลือกที่นั่ง',
-                confirmButtonColor:'#db2777',
-                customClass:{popup:'rounded-[22px]'}
-              });
-              return;
-            }
+if(!name || !seatId){
+  Swal.fire({
+    icon:'warning',
+    title:'กรอกให้ครบก่อนนะ',
+    text:'กรุณากรอกชื่อ และเลือกที่นั่ง',
+    confirmButtonColor:'#db2777',
+    customClass:{popup:'rounded-[22px]'}
+  });
+  return;
+}
 
             const res = await fetch('/api/book',{
               method:'POST',
