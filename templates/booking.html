@@ -463,6 +463,150 @@
         padding:8px 10px;
       }
     }
+
+    /* =========================
+   MOBILE TABLE POPUP (8px)
+   ========================= */
+.swal2-popup.tblpop{
+  border-radius:22px !important;
+  overflow:hidden;
+}
+
+/* ทุกอย่าง 8px จริง */
+.tblpop, .tblpop *{
+  font-size:8px !important;
+  line-height:1.25 !important;
+}
+
+/* โครง popup */
+.tblpop .tp-wrap{ padding:10px; }
+.tblpop .tp-head{
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  margin-bottom:8px;
+}
+.tblpop .tp-title{
+  min-width:0;
+  display:flex; flex-direction:column; gap:4px;
+}
+.tblpop .tp-title .name{
+  font-size:11px !important;   /* 🔥 ใหญ่ขึ้น */
+  font-weight:900;
+  line-height:1.25;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.tblpop .tp-badges{ display:flex; flex-wrap:wrap; gap:6px; }
+.tblpop .tp-badge{
+  display:inline-flex; align-items:center; gap:4px;
+  padding:4px 8px; border-radius:999px;
+  border:1px solid rgba(226,232,240,.95);
+  background:rgba(255,255,255,.85);
+}
+.tblpop .tp-close{
+  width:34px; height:34px; border-radius:12px;
+  border:1px solid rgba(226,232,240,.95);
+  background:#fff;
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* list */
+.tblpop .tp-list{
+  border:1px solid rgba(226,232,240,.95);
+  border-radius:16px;
+  overflow:auto;
+  max-height:58vh;
+  background:rgba(255,255,255,.75);
+}
+.tblpop .tp-row{
+  display:flex; gap:8px; align-items:center; justify-content:space-between;
+  padding:10px;
+  border-bottom:1px solid rgba(226,232,240,.8);
+}
+.tblpop .tp-row:last-child{ border-bottom:none; }
+.tblpop .tp-left{ min-width:0; }
+.tblpop .tp-seat{
+  font-size:5.5px !important;
+  font-weight:500;
+  letter-spacing:.1em;
+  opacity:.45;
+}
+.tblpop .tp-guest{
+  margin-top:4px;
+  font-weight:900;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.tblpop .tp-tags{ margin-top:4px; display:flex; flex-wrap:wrap; gap:6px; }
+.tblpop .tp-tag{
+  display:inline-flex; align-items:center; gap:4px;
+  padding:3px 8px; border-radius:999px;
+  border:1px solid rgba(226,232,240,.95);
+  background:rgba(255,255,255,.9);
+  opacity:.9;
+}
+.tblpop .tp-tag.red{
+  background:rgba(254,242,242,.95);
+  border-color:rgba(254,202,202,.95);
+  color:#991b1b;
+}
+
+/* right side */
+.tblpop .tp-right{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
+.tblpop .tp-pill{
+  padding:4px 8px; border-radius:999px;
+  border:1px solid rgba(226,232,240,.95);
+  font-weight:900;
+  background:#fff;
+}
+.tblpop .tp-pill.ok{ background:#ecfdf5; color:#065f46; border-color:rgba(16,185,129,.25); }
+.tblpop .tp-pill.bad{ background:#fff1f2; color:#9f1239; border-color:rgba(251,113,133,.35); }
+.tblpop .tp-pill.arr{ background:#eef2ff; color:#3730a3; border-color:rgba(99,102,241,.25); }
+
+/* buttons */
+.tblpop .tp-btn{
+  padding:6px 10px;
+  border-radius:12px;
+  border:1px solid rgba(226,232,240,.95);
+  font-weight:900;
+  background:#fff;
+}
+.tblpop .tp-btn.reg{
+  color:#fff;
+  background:linear-gradient(135deg,#16a34a 0%,#34d399 100%);
+  border-color:rgba(16,185,129,.25);
+}
+.tblpop .tp-btn.arrive{
+  color:#fff;
+  background:linear-gradient(135deg,#db2777 0%, #fb7185 100%);
+  border-color:rgba(219,39,119,.25);
+}
+.tblpop .tp-btn.edit{
+  background:#fff;
+}
+.tblpop .tp-btn.danger{
+  background:#fff1f2;
+  color:#9f1239;
+  border-color:rgba(254,202,202,.95);
+}
+.tblpop .tp-btn.disabled{
+  background:#f1f5f9; color:#94a3b8;
+  cursor:not-allowed;
+}
+
+/* footer nav */
+.tblpop .tp-nav{
+  margin-top:10px;
+  display:flex; gap:8px;
+}
+.tblpop .tp-nav button{
+  flex:1;
+  padding:10px 10px;
+  border-radius:16px;
+  border:1px solid rgba(226,232,240,.95);
+  background:rgba(255,255,255,.9);
+  font-weight:900;
+}
+
   </style>
 </head>
 
@@ -613,155 +757,137 @@
     }
 
     function openTable(tn) {
-      SELECTED_TABLE = tn;
-      render();
+  SELECTED_TABLE = tn;
+  render();
 
-      const t = TABLES.find(x => Number(x.table_number)===tn) || {};
-      const seats = (t.seats || []);
+  const t = TABLES.find(x => Number(x.table_number) === tn) || {};
+  const seats = (t.seats || []);
 
-      const bookedCount = seats.filter(s => (String(s.status||'').toLowerCase()==='booked') && String(s.guest_name||'').trim()).length;
-      const emptyCount = 10 - bookedCount;
-      const statusText = emptyCount===0 ? 'เต็มแล้ว' : `ว่าง ${emptyCount} ที่`;
+  const bookedCount = seats.filter(s =>
+    (String(s.status || '').toLowerCase() === 'booked') &&
+    String(s.guest_name || '').trim()
+  ).length;
 
-      const listHtml = seats.map(s => {
-        const seatId = s.id || '';
-        const seatNo = s.seat_number;
+  const emptyCount = 10 - bookedCount;
+  const statusText = emptyCount === 0 ? 'เต็มแล้ว' : `${emptyCount} ที่`;
 
-        const name = String(s.guest_name||'').trim();
-        const intro = String(s.guest_intro||'').trim();
-        const tag = String(s.guest_tag||'').trim();
-        const gift = String(s.guest_gift_amount||'').trim();
 
-        const reserved = String(s.reserved_for||'').trim();
-        const isBooked = String(s.status||'').toLowerCase()==='booked' && name.length;
-        const isAvailable = String(s.status||'').toLowerCase()==='available';
-        const arrived = s.arrived === true;
+  const tableLabel = (t.table_name && t.table_name.trim().length)
+    ? t.table_name.trim()
+    : `โต๊ะ ${tn}`;
 
-        const rightPill = isBooked
-          ? (arrived ? `<span class="pill arr">มาถึงแล้ว</span>` : `<span class="pill bad">จองแล้ว</span>`)
-          : `<span class="pill ok">ว่าง</span>`;
+  const listHtml = seats.map(s => {
+    const seatId = s.id || '';
+    const seatNo = s.seat_number;
 
-        let actionBtn = '';
-        if (isBooked) {
-          actionBtn = arrived
-            ? `<button class="lux-btn disabled" disabled>ยืนยันแล้ว</button>`
-            : `<button class="lux-btn arrive"
-                 onclick="confirmArrival('${escapeAttr(seatId)}', ${tn}, ${seatNo})">ยืนยันมาถึง</button>`;
-        } else {
-          actionBtn = seatId
-            ? `<button class="lux-btn reg"
-                 onclick="goRegister(${tn}, '${escapeAttr(seatId)}')">ลงทะเบียน</button>`
-            : `<button class="lux-btn disabled" disabled>ยังไม่พร้อม</button>`;
-        }
+    const name = String(s.guest_name || '').trim();
+    const intro = String(s.guest_intro || '').trim();
+    const tag = String(s.guest_tag || '').trim();
+    const gift = String(s.guest_gift_amount || '').trim();
 
-        const reservedTagHtml = (!isBooked && reserved)
-          ? `<div class="lux-intro"><span class="tag red">🏷️ จองไว้: ${escapeHtml(reserved)}</span></div>`
-          : '';
+    const reserved = String(s.reserved_for || '').trim();
 
-        const introHtml = (isBooked && intro)
-          ? `<div class="lux-intro"><span class="tag">✨ ${escapeHtml(intro)}</span></div>`
-          : '';
+    const isBooked = String(s.status || '').toLowerCase() === 'booked' && name.length;
+    const isAvailable = String(s.status || '').toLowerCase() === 'available';
+    const arrived = s.arrived === true;
 
-        const guestTagHtml = (isBooked && tag)
-          ? `<div class="lux-intro"><span class="tag">🏷️ ${escapeHtml(tag)}</span></div>`
-          : '';
+    // pill
+   const pill = isBooked && arrived
+  ? `<span class="tp-pill arr">มาถึงแล้ว</span>`
+  : ``;
 
-        const giftHtml = (isBooked && gift)
-          ? `<div class="lux-intro"><span class="tag">💵 ${escapeHtml(gift)}</span></div>`
-          : '';
-
-        const nameHtml = name ? escapeHtml(name) : '';
-
-        const editGuestBtn = (ADMIN_MODE && isBooked && s.guest_id)
-          ? `<button class="lux-btn edit" onclick="editGuest('${escapeAttr(s.guest_id)}', ${tn})">✏️ แก้</button>`
-          : '';
-
-        const reserveSeatBtn = (ADMIN_MODE && isAvailable && seatId)
-          ? `<button class="lux-btn edit" onclick="editSeatReserve('${escapeAttr(seatId)}', ${tn}, '${escapeAttr(reserved)}')">🏷️ จอง</button>`
-          : '';
-
-        const clearReserveBtn = (ADMIN_MODE && isAvailable && seatId && reserved)
-          ? `<button class="lux-btn danger" onclick="clearSeatReserve('${escapeAttr(seatId)}', ${tn})">ล้าง</button>`
-          : '';
-
-        return `
-          <div class="lux-row">
-            <div class="lux-left">
-              <div class="lux-seat">SEAT ${seatNo}</div>
-
-              ${nameHtml ? `<div class="lux-name">${nameHtml}</div>` : ``}
-
-              ${reservedTagHtml}
-              ${introHtml}
-              ${guestTagHtml}
-              ${giftHtml}
-            </div>
-
-            <div class="flex items-center gap-2">
-              ${rightPill}
-              ${actionBtn}
-              ${editGuestBtn}
-              ${reserveSeatBtn}
-              ${clearReserveBtn}
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      Swal.fire({
-        title: '',
-        html: `
-          <div class="text-left">
-            <div class="flex items-start justify-between gap-3 mb-3">
-              <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-2xl bg-pink-50 flex items-center justify-center shadow-sm border border-pink-100">
-                  <span class="text-2xl">🍽️</span>
-                </div>
-                <div class="min-w-0">
-                  <div class="text-xl font-extrabold text-slate-900 leading-tight truncate">
-                    ${escapeHtml((t.table_name && t.table_name.trim().length) ? t.table_name : `โต๊ะ ${tn}`)}
-                  </div>
-                  <div class="mt-1 flex flex-wrap items-center gap-2">
-                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-600 text-xs font-extrabold shadow-sm">
-                      สถานะ: <span class="text-slate-900">${escapeHtml(statusText)}</span>
-                    </span>
-                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-50 border border-pink-100 text-pink-700 text-xs font-extrabold shadow-sm">
-                      โต๊ะ #${tn}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="flex items-center gap-2">
-                ${ADMIN_MODE ? `
-                  <button class="px-3 py-2 rounded-xl text-xs font-extrabold bg-white border border-slate-200 shadow-sm"
-                    onclick="editTableName(${tn})">✏️ ชื่อโต๊ะ</button>
-                ` : ``}
-
-                <button class="w-10 h-10 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition"
-                  onclick="Swal.close()" aria-label="close">✕</button>
-              </div>
-            </div>
-
-            <div class="lux-wrap" style="max-height:55vh; overflow:auto;">
-              ${listHtml}
-            </div>
-
-            <div class="lux-nav">
-              <button id="btnPrev">◀ โต๊ะก่อนหน้า</button>
-              <button id="btnNext">โต๊ะถัดไป ▶</button>
-            </div>
-          </div>
-        `,
-        showConfirmButton:false,
-        showCloseButton:false,
-        willClose:()=>{ SELECTED_TABLE=null; render(); },
-        didOpen:()=>{
-          document.getElementById('btnPrev').onclick=()=>switchTable(tn<=1?32:tn-1);
-          document.getElementById('btnNext').onclick=()=>switchTable(tn>=32?1:tn+1);
-        }
-      });
+    // actions
+    let actionBtn = '';
+    if (isBooked) {
+      actionBtn = arrived
+        ? `<button class="tp-btn disabled" disabled>ยืนยันแล้ว</button>`
+        : `<button class="tp-btn arrive"
+             onclick="confirmArrival('${escapeAttr(seatId)}', ${tn}, ${seatNo})">ยืนยันมาถึง</button>`;
+    } else {
+      actionBtn = seatId
+        ? `<button class="tp-btn reg" onclick="goRegister(${tn}, '${escapeAttr(seatId)}')">ลงทะเบียน</button>`
+        : `<button class="tp-btn disabled" disabled>ยังไม่พร้อม</button>`;
     }
+
+    // admin actions
+    const editGuestBtn = (ADMIN_MODE && isBooked && s.guest_id)
+      ? `<button class="tp-btn edit" onclick="editGuest('${escapeAttr(s.guest_id)}', ${tn})">แก้</button>`
+      : '';
+
+    const reserveSeatBtn = (ADMIN_MODE && isAvailable && seatId)
+      ? `<button class="tp-btn edit" onclick="editSeatReserve('${escapeAttr(seatId)}', ${tn}, '${escapeAttr(reserved)}')">จอง</button>`
+      : '';
+
+    const clearReserveBtn = (ADMIN_MODE && isAvailable && seatId && reserved)
+      ? `<button class="tp-btn danger" onclick="clearSeatReserve('${escapeAttr(seatId)}', ${tn})">ล้าง</button>`
+      : '';
+
+    // tags (left)
+    const tags = [];
+    if (!isBooked && reserved) tags.push(`<span class="tp-tag red">🏷️ จองไว้: ${escapeHtml(reserved)}</span>`);
+    if (isBooked && intro) tags.push(`<span class="tp-tag">✨ ${escapeHtml(intro)}</span>`);
+    if (isBooked && tag) tags.push(`<span class="tp-tag">🏷️ ${escapeHtml(tag)}</span>`);
+    if (isBooked && gift) tags.push(`<span class="tp-tag">💵 ${escapeHtml(gift)}</span>`);
+
+    return `
+      <div class="tp-row">
+        <div class="tp-left">
+          <div class="tp-seat">SEAT ${seatNo}</div>
+          ${name ? `<div class="tp-guest">${escapeHtml(name)}</div>` : ``}
+          ${tags.length ? `<div class="tp-tags">${tags.join('')}</div>` : ``}
+        </div>
+
+        <div class="tp-right">
+          ${pill}
+          ${actionBtn}
+          ${editGuestBtn}
+          ${reserveSeatBtn}
+          ${clearReserveBtn}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  Swal.fire({
+    title: '',
+    html: `
+      <div class="tp-wrap">
+        <div class="tp-head">
+          <div class="tp-title">
+            <div class="name">${escapeHtml(tableLabel)}</div>
+            <div class="tp-badges">
+              <span class="tp-badge">สถานะ: <b>${escapeHtml(statusText)}</b></span>
+              <span class="tp-badge">โต๊ะ #<b>${tn}</b></span>
+              ${ADMIN_MODE ? `<button class="tp-btn edit" onclick="editTableName(${tn})">ชื่อโต๊ะ</button>` : ``}
+            </div>
+          </div>
+
+          <button class="tp-close" onclick="Swal.close()" aria-label="close">✕</button>
+        </div>
+
+        <div class="tp-list">
+          ${listHtml || `<div style="padding:10px; opacity:.7;">ไม่มีข้อมูลที่นั่ง</div>`}
+        </div>
+
+        <div class="tp-nav">
+          <button id="btnPrev">◀ โต๊ะก่อนหน้า</button>
+          <button id="btnNext">โต๊ะถัดไป ▶</button>
+        </div>
+      </div>
+    `,
+    showConfirmButton: false,
+    showCloseButton: false,
+    customClass: { popup: 'tblpop' },   // ✅ ใช้คลาสใหม่ (8px ทั้งหมด)
+    willClose: () => { SELECTED_TABLE = null; render(); },
+    didOpen: () => {
+      const p = document.getElementById('btnPrev');
+      const n = document.getElementById('btnNext');
+      if (p) p.onclick = () => switchTable(tn <= 1 ? 32 : tn - 1);
+      if (n) n.onclick = () => switchTable(tn >= 32 ? 1 : tn + 1);
+    }
+  });
+}
+
 
     function switchTable(next){
       Swal.close();
@@ -999,11 +1125,11 @@
           <div class="reg-lux text-left">
             <div class="flex items-center gap-3 mb-3">
               <div class="w-12 h-12 rounded-2xl bg-pink-50 flex items-center justify-center shadow-sm border border-pink-100">
-                <span class="text-2xl">📝</span>
+                <span class="font-size:12px;">📝</span>
               </div>
               <div>
-                <div class="text-lg font-extrabold text-gray-900 leading-tight">ลงทะเบียนแขก</div>
-                <div class="text-xs text-gray-500">เลือกโต๊ะและที่นั่ง</div>
+                <div class="font-size:12px; font-extrabold text-gray-900 leading-tight">ลงทะเบียนแขก</div>
+                <div class="font-size:12px; text-gray-500">เลือกโต๊ะและที่นั่ง</div>
               </div>
 
               <div class="ml-auto">
@@ -1228,7 +1354,7 @@ if(!name || !seatId){
                   <span class="text-2xl">💌</span>
                 </div>
                 <div class="min-w-0">
-                  <div class="text-xl font-extrabold text-slate-900 leading-tight">
+                  <div class="text-s font-extrabold text-slate-900 leading-tight">
                     เขียนอวยพร
                   </div>
                   <div class="text-xs text-slate-500 mt-1">
@@ -1387,7 +1513,7 @@ if(!name || !seatId){
             <div class="flex items-center gap-3 mb-3">
               <div class="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-xl">📊</div>
               <div>
-                <div class="text-xl font-extrabold">สรุป</div>
+                <div class="text-s font-extrabold">สรุป</div>
                 <div class="text-xs text-gray-500">แอดมินเท่านั้น</div>
               </div>
             </div>
