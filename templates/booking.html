@@ -92,7 +92,7 @@
       position:absolute;
       transform:translate(-50%,-50%);
       cursor:pointer;
-      width:44px;height:44px;border-radius:999px;
+      width:30px;height:30px;border-radius:999px;
       background:rgba(255,255,255,.58);
       border:1.5px solid rgba(16,185,129,.90);
       box-shadow:0 6px 16px rgba(15,23,42,.14);
@@ -114,7 +114,7 @@
       left:50%;
       transform:translateX(-50%);
       padding:2px 6px;
-      font-size:8px;
+      font-size:5px;
       font-weight:400;
       border-radius:999px;
       background:rgba(255,255,255,.88);
@@ -135,10 +135,10 @@
     }
 
     @media (max-width:640px){
-      .table-hotspot{ width:40px; height:40px; }
-      .table-num{ font-size:13px; }
-      .table-label{ font-size:7.5px; padding:2px 5px; top:-9px; max-width:84px; }
-      .table-tap-hint{ font-size:6.5px; }
+      .table-hotspot{ width:25px; height:25px; }
+      .table-num{ font-size:6px; }
+      .table-label{ font-size:5px; padding:2px 5px; top:-9px; max-width:84px; }
+      .table-tap-hint{ font-size:4px; }
     }
 
     /* ===== SweetAlert ===== */
@@ -605,6 +605,187 @@
   border:1px solid rgba(226,232,240,.95);
   background:rgba(255,255,255,.9);
   font-weight:900;
+}
+/* =========================
+   WISH POPUP (MOBILE / 8px)
+   ========================= */
+.swal2-popup.wishpop{
+  border-radius:22px !important;
+  overflow:hidden;
+}
+
+/* ทุกอย่างไม่เกิน 8px */
+.wishpop,
+.wishpop *{
+  font-size:8px !important;
+  line-height:1.25 !important;
+}
+
+/* layout */
+.wishpop .wp-wrap{ padding:12px; }
+.wishpop .wp-head{
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  margin-bottom:10px;
+}
+.wishpop .wp-title{
+  font-weight:900;
+}
+.wishpop .wp-sub{
+  margin-top:2px;
+  opacity:.6;
+}
+.wishpop .wp-close{
+  width:32px; height:32px;
+  border-radius:12px;
+  border:1px solid rgba(226,232,240,.95);
+  background:#fff;
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* form */
+.wishpop .wp-box{
+  border:1px solid rgba(226,232,240,.95);
+  border-radius:16px;
+  padding:10px;
+  background:rgba(255,255,255,.9);
+  display:grid;
+  gap:8px;
+}
+.wishpop label{
+  font-weight:700;
+  opacity:.8;
+}
+.wishpop input,
+.wishpop textarea{
+  width:100%;
+  border-radius:12px;
+  border:1px solid rgba(226,232,240,.95);
+  padding:8px 10px;
+  outline:none;
+  resize:none;
+}
+.wishpop textarea{ min-height:80px; }
+
+.wishpop .wp-count{
+  text-align:right;
+  opacity:.6;
+}
+
+/* buttons */
+.wishpop .wp-actions{
+  margin-top:10px;
+  display:flex;
+  gap:8px;
+}
+.wishpop .wp-btn{
+  flex:1;
+  padding:10px;
+  border-radius:14px;
+  border:1px solid rgba(226,232,240,.95);
+  font-weight:900;
+  background:#fff;
+}
+.wishpop .wp-btn.send{
+  color:#fff;
+  background:linear-gradient(135deg,#db2777 0%, #fb7185 100%);
+  border-color:rgba(219,39,119,.25);
+}
+/* =========================
+   REGISTER POPUP (MOBILE / 8px)
+   ========================= */
+.swal2-popup.regpop{
+  border-radius:22px !important;
+  overflow:hidden;
+}
+
+/* ทุกอย่างไม่เกิน 8px */
+.regpop,
+.regpop *{
+  font-size:8px !important;
+  line-height:1.25 !important;
+}
+
+/* layout */
+.regpop .rp-wrap{ padding:12px; }
+.regpop .rp-head{
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  margin-bottom:10px;
+}
+.regpop .rp-title{
+  font-weight:900;
+}
+.regpop .rp-sub{
+  margin-top:2px;
+  opacity:.6;
+}
+.regpop .rp-close{
+  width:32px; height:32px;
+  border-radius:12px;
+  border:1px solid rgba(226,232,240,.95);
+  background:#fff;
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* form box */
+.regpop .rp-box{
+  border:1px solid rgba(226,232,240,.95);
+  border-radius:16px;
+  padding:10px;
+  background:rgba(255,255,255,.9);
+  display:grid;
+  gap:8px;
+}
+
+.regpop label{
+  font-weight:700;
+  opacity:.8;
+}
+
+.regpop input,
+.regpop textarea,
+.regpop select{
+  width:100%;
+  border-radius:12px;
+  border:1px solid rgba(226,232,240,.95);
+  padding:8px 10px;
+  outline:none;
+}
+
+.regpop textarea{ resize:none; }
+
+/* summary */
+.regpop .rp-summary{
+  display:inline-flex;
+  padding:4px 8px;
+  border-radius:999px;
+  border:1px solid rgba(226,232,240,.95);
+  background:rgba(255,255,255,.85);
+  font-weight:900;
+}
+
+/* hint */
+.regpop .rp-hint{
+  opacity:.6;
+}
+
+/* buttons */
+.regpop .rp-actions{
+  margin-top:10px;
+  display:flex;
+  gap:8px;
+}
+.regpop .rp-btn{
+  flex:1;
+  padding:10px;
+  border-radius:14px;
+  border:1px solid rgba(226,232,240,.95);
+  font-weight:900;
+  background:#fff;
+}
+.regpop .rp-btn.send{
+  color:#fff;
+  background:linear-gradient(135deg,#16a34a 0%, #34d399 100%);
+  border-color:rgba(16,185,129,.25);
 }
 
   </style>
@@ -1105,173 +1286,197 @@
     window.goRegister = (tableNum, seatId) => openRegisterPopup(tableNum, seatId);
 
     async function openRegisterPopup(preTable=null, preSeatId=null){
-      if(!TABLES || !TABLES.length){
+  if(!TABLES || !TABLES.length){
+    await loadTables();
+  }
+
+  const tables = TABLES || [];
+  const tableOptions =
+    `<option value="">— เลือกโต๊ะ —</option>` +
+    tables.map(t=>{
+      const label = t.table_name && t.table_name.trim()
+        ? `โต๊ะ ${t.table_number} ${t.table_name.trim()}`
+        : `โต๊ะ ${t.table_number}`;
+      return `<option value="${t.table_number}">${escapeHtml(label)}</option>`;
+    }).join('');
+
+  Swal.fire({
+    title:'',
+    html:`
+      <div class="rp-wrap">
+        <div class="rp-head">
+          <div>
+            <div class="rp-title">ลงทะเบียนแขก</div>
+            <div class="rp-sub">เลือกโต๊ะและที่นั่ง</div>
+          </div>
+          <button class="rp-close" onclick="Swal.close()" aria-label="close">✕</button>
+        </div>
+
+        <div class="rp-box">
+          <div>
+            <label>ชื่อ-นามสกุล</label>
+            <input id="rp_name" placeholder="เช่น คุณสมชาย ใจดี">
+          </div>
+
+          <div>
+            <label>แนะนำตัว</label>
+            <textarea id="rp_intro" rows="2" placeholder="เช่น เพื่อนเจ้าบ่าว / ครอบครัว"></textarea>
+          </div>
+
+          <div>
+            <label>โต๊ะ</label>
+            <select id="rp_table">${tableOptions}</select>
+          </div>
+
+          <div>
+            <label>ที่นั่ง</label>
+            <select id="rp_seat"></select>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div id="rp_hint" class="rp-hint"></div>
+            <div id="rp_summary" class="rp-summary">—</div>
+          </div>
+        </div>
+
+        <div class="rp-actions">
+          <button class="rp-btn" id="rp_cancel">ยกเลิก</button>
+          <button class="rp-btn send" id="rp_confirm">ยืนยัน</button>
+        </div>
+      </div>
+    `,
+    showConfirmButton:false,
+    showCloseButton:false,
+    customClass:{ popup:'regpop' },
+    didOpen:()=>{
+      const nameEl = document.getElementById('rp_name');
+      const introEl = document.getElementById('rp_intro');
+      const tableSel = document.getElementById('rp_table');
+      const seatSel = document.getElementById('rp_seat');
+      const hintEl = document.getElementById('rp_hint');
+      const sumEl  = document.getElementById('rp_summary');
+
+      if(preTable) tableSel.value = String(preTable);
+
+      tableSel.onchange = ()=>rebuildSeats();
+      seatSel.onchange  = ()=>updateSummary();
+
+      document.getElementById('rp_cancel').onclick = ()=>Swal.close();
+
+      document.getElementById('rp_confirm').onclick = async ()=>{
+        const name = nameEl.value.trim();
+        const intro = introEl.value.trim();
+        const seatId = seatSel.value;
+
+        if(!name || !seatId){
+          Swal.fire({
+            icon:'warning',
+            title:'กรอกไม่ครบ',
+            text:'กรุณากรอกชื่อและเลือกที่นั่ง',
+            confirmButtonColor:'#16a34a'
+          });
+          return;
+        }
+
+        const res = await fetch('/api/book',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ seatId, name, intro })
+        });
+        const out = await res.json();
+
+        if(!out.success){
+          Swal.fire({
+            icon:'error',
+            title:'ลงทะเบียนไม่สำเร็จ',
+            text:(out.message || out.error || 'ลองใหม่'),
+            confirmButtonColor:'#16a34a'
+          });
+          return;
+        }
+
         await loadTables();
+        Swal.fire({
+          icon:'success',
+          title:'สำเร็จ',
+          text:'ลงทะเบียนเรียบร้อย',
+          confirmButtonColor:'#16a34a'
+        }).then(()=>Swal.close());
+      };
+
+      rebuildSeats(preSeatId);
+
+      function rebuildSeats(selId=null){
+        const tableVal = tableSel.value;
+        seatSel.innerHTML = '';
+
+        if(!tableVal){
+          seatSel.disabled = true;
+          hintEl.textContent = 'เลือกโต๊ะก่อน';
+          sumEl.textContent = '—';
+          return;
+        }
+
+        const t = TABLES.find(x=>Number(x.table_number)===Number(tableVal)) || {};
+        const available = (t.seats||[]).filter(s =>
+          String(s.status||'').toLowerCase()==='available' && s.id
+        );
+
+        const ph = document.createElement('option');
+        ph.value='';
+        ph.textContent='— เลือกที่นั่ง —';
+        seatSel.appendChild(ph);
+
+        if(!available.length){
+          seatSel.disabled = true;
+          hintEl.textContent = 'โต๊ะนี้เต็ม';
+          sumEl.textContent = '—';
+          return;
+        }
+
+        seatSel.disabled = false;
+        available.forEach(s=>{
+  const opt = document.createElement('option');
+  opt.value = s.id;
+
+  const r = String(s.reserved_for || '').trim();
+
+  opt.textContent = r
+    ? `ที่นั่ง ${s.seat_number} • จอง: ${r}`
+    : `ที่นั่ง ${s.seat_number}`;
+
+  /* 🔥 เก็บสถานะป้ายจองไว้กับ option */
+  opt.dataset.reserved = r ? '1' : '';
+  opt.dataset.reservedFor = r;
+
+  seatSel.appendChild(opt);
+});
+
+
+        if(selId) seatSel.value = String(selId);
+        hintEl.textContent = `ว่าง ${available.length} ที่`;
+        updateSummary();
       }
 
-      const tables = TABLES || [];
-      const tableOptions =
-        `<option value="">— เลือกโต๊ะ —</option>` +
-        tables.map(t=>{
-          const label = (t.table_name && t.table_name.trim())
-            ? t.table_name
-            : `โต๊ะ ${t.table_number}`;
-          return `<option value="${t.table_number}">${escapeHtml(label)}</option>`;
-        }).join('');
-
-      Swal.fire({
-        title: '',
-        html: `
-          <div class="reg-lux text-left">
-            <div class="flex items-center gap-3 mb-3">
-              <div class="w-12 h-12 rounded-2xl bg-pink-50 flex items-center justify-center shadow-sm border border-pink-100">
-                <span class="font-size:12px;">📝</span>
-              </div>
-              <div>
-                <div class="font-size:12px; font-extrabold text-gray-900 leading-tight">ลงทะเบียนแขก</div>
-                <div class="font-size:12px; text-gray-500">เลือกโต๊ะและที่นั่ง</div>
-              </div>
-
-              <div class="ml-auto">
-                <button class="w-10 h-10 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition"
-                  onclick="Swal.close()" aria-label="close">✕</button>
-              </div>
-            </div>
-
-            <div class="p-3 rounded-2xl border bg-white shadow-sm grid gap-3">
-              <div>
-                <label class="text-xs font-extrabold text-gray-700">ชื่อ-นามสกุล</label>
-                <input id="reg_name"
-                  class="mt-1 w-full px-4 py-3 rounded-2xl border border-gray-200 outline-none focus:ring-4 focus:ring-pink-100 focus:border-pink-300"
-                  placeholder="เช่น คุณสมชาย ใจดี">
-              </div>
-
-              <div>
-                <label class="text-xs font-extrabold text-gray-700">แนะนำตัวเอง</label>
-                <textarea id="reg_intro" rows="3"
-                  class="mt-1 w-full px-4 py-3 rounded-2xl border border-gray-200 outline-none focus:ring-4 focus:ring-pink-100 focus:border-pink-300"
-                  placeholder="เช่น เพื่อนเจ้าบ่าว / ทีมงาน"></textarea>
-              </div>
-
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label class="text-xs font-extrabold text-gray-700">โต๊ะ</label>
-                  <select id="reg_table"
-                    class="mt-1 w-full px-4 py-3 rounded-2xl border border-gray-200 outline-none focus:ring-4 focus:ring-pink-100 focus:border-pink-300">
-                    ${tableOptions}
-                  </select>
-                </div>
-
-                <div>
-                  <label class="text-xs font-extrabold text-gray-700">ที่นั่ง (ว่าง)</label>
-                  <select id="reg_seat"
-                    class="mt-1 w-full px-4 py-3 rounded-2xl border border-gray-200 outline-none focus:ring-4 focus:ring-pink-100 focus:border-pink-300">
-                  </select>
-                </div>
-              </div>
-
-              <div class="flex items-center justify-between gap-2">
-                <div id="reg_hint" class="text-xs text-gray-500"></div>
-                <div id="reg_summary"
-                  class="text-xs font-extrabold px-3 py-2 rounded-full bg-pink-50 text-pink-700 border border-pink-100">
-                  —
-                </div>
-              </div>
-
-              <div class="flex gap-2 mt-1">
-                <button id="reg_cancel" type="button"
-                  class="flex-1 px-4 py-3 rounded-2xl font-extrabold bg-slate-100 text-slate-700 border border-slate-200 hover:shadow-sm transition">
-                  ยกเลิก
-                </button>
-                <button id="reg_confirm" type="button"
-                  class="flex-1 px-4 py-3 rounded-2xl font-extrabold text-white border border-pink-200 hover:shadow-md transition"
-                  style="background: linear-gradient(135deg, #db2777 0%, #fb7185 100%);">
-                  ยืนยัน
-                </button>
-              </div>
-            </div>
-          </div>
-        `,
-        showConfirmButton:false,
-        showCloseButton:false,
-        didOpen: ()=>{
-          const tableSel = document.getElementById('reg_table');
-          const seatSel  = document.getElementById('reg_seat');
-
-          if(preTable) tableSel.value = String(preTable);
-          else tableSel.value = "";
-
-          tableSel.onchange = ()=>rebuildSeatOptions(null);
-          seatSel.onchange  = ()=>updateRegSummary();
-
-          document.getElementById('reg_cancel').onclick = ()=>Swal.close();
-
-          document.getElementById('reg_confirm').onclick = async ()=>{
-            const name = document.getElementById('reg_name').value.trim();
-const intro = document.getElementById('reg_intro').value.trim();
-const seatId = document.getElementById('reg_seat').value;
-
-if(!name || !seatId){
-  Swal.fire({
-    icon:'warning',
-    title:'กรอกให้ครบก่อนนะ',
-    text:'กรุณากรอกชื่อ และเลือกที่นั่ง',
-    confirmButtonColor:'#db2777',
-    customClass:{popup:'rounded-[22px]'}
+      function updateSummary(){
+        const tableVal = tableSel.value;
+        if(!tableVal){
+          sumEl.textContent='—';
+          return;
+        }
+        const t = TABLES.find(x=>Number(x.table_number)===Number(tableVal)) || {};
+        const label = t.table_name && t.table_name.trim()
+          ? `โต๊ะ ${t.table_number} ${t.table_name.trim()}`
+          : `โต๊ะ ${t.table_number}`;
+        const seatText = seatSel.options[seatSel.selectedIndex]
+          ? seatSel.options[seatSel.selectedIndex].textContent
+          : '';
+        sumEl.textContent = seatText ? `${label} • ${seatText}` : label;
+      }
+    }
   });
-  return;
 }
 
-            const res = await fetch('/api/book',{
-              method:'POST',
-              headers:{'Content-Type':'application/json'},
-              body: JSON.stringify({ seatId, name, intro })
-            });
-            const out = await res.json();
-
-            if(!out.success){
-              Swal.fire({
-                icon:'error',
-                title:'จองไม่สำเร็จ',
-                text:(out.message || out.error || 'ลองใหม่อีกครั้ง'),
-                confirmButtonColor:'#db2777',
-                customClass:{popup:'rounded-[22px]'}
-              });
-              return;
-            }
-
-            await loadTables();
-            Swal.fire({
-              icon:'success',
-              title:'สำเร็จ',
-              text:'ลงทะเบียนเรียบร้อย',
-              confirmButtonColor:'#db2777',
-              customClass:{popup:'rounded-[22px]'}
-            }).then(()=>Swal.close());
-          };
-
-          rebuildSeatOptions(preSeatId);
-          updateRegSummary();
-
-          function updateRegSummary(){
-            const tableVal = tableSel.value;
-            const seatText = seatSel && seatSel.options[seatSel.selectedIndex]
-              ? seatSel.options[seatSel.selectedIndex].textContent
-              : '—';
-
-            if(!tableVal){
-              document.getElementById('reg_summary').textContent = `—`;
-              return;
-            }
-
-            const tableNum = Number(tableVal);
-            const t = TABLES.find(x=>Number(x.table_number)===tableNum) || {};
-            const tLabel = (t.table_name && t.table_name.trim()) ? t.table_name : `โต๊ะ ${tableNum}`;
-            document.getElementById('reg_summary').textContent = `${tLabel} • ${seatText}`;
-          }
-        }
-      });
-    }
 
     function rebuildSeatOptions(preSeatId=null){
       const tableVal = document.getElementById('reg_table').value;
@@ -1319,16 +1524,22 @@ if(!name || !seatId){
 
       seatSel.disabled = false;
       available.forEach(s=>{
-        const opt=document.createElement('option');
-        opt.value=s.id;
+  const opt = document.createElement('option');
+  opt.value = s.id;
 
-        const r = String(s.reserved_for||'').trim();
-        opt.textContent = r
-          ? `ที่นั่ง ${s.seat_number} (จองไว้: ${r})`
-          : `ที่นั่ง ${s.seat_number}`;
+  const r = String(s.reserved_for || '').trim();
 
-        seatSel.appendChild(opt);
-      });
+  opt.textContent = r
+    ? `ที่นั่ง ${s.seat_number} • จอง: ${r}`
+    : `ที่นั่ง ${s.seat_number}`;
+
+  /* 🔥 เก็บสถานะป้ายจองไว้กับ option */
+  opt.dataset.reserved = r ? '1' : '';
+  opt.dataset.reservedFor = r;
+
+  seatSel.appendChild(opt);
+});
+
 
       if(preSeatId) seatSel.value = String(preSeatId);
 
@@ -1344,119 +1555,108 @@ if(!name || !seatId){
     // Popup: Wish
     // -----------------------------
     function openWishPopup(){
-      Swal.fire({
-        title: '',
-        html: `
-          <div class="text-left">
-            <div class="flex items-start justify-between gap-3 mb-3">
-              <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-2xl bg-pink-50 flex items-center justify-center shadow-sm border border-pink-100">
-                  <span class="text-2xl">💌</span>
-                </div>
-                <div class="min-w-0">
-                  <div class="text-s font-extrabold text-slate-900 leading-tight">
-                    เขียนอวยพร
-                  </div>
-                  <div class="text-xs text-slate-500 mt-1">
-                    ฝากข้อความให้ Palmy &amp; Sumo
-                  </div>
-                </div>
-              </div>
-
-              <button class="w-10 h-10 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition"
-                onclick="Swal.close()" aria-label="close">✕</button>
-            </div>
-
-            <div class="p-4 rounded-2xl border bg-white shadow-sm">
-              <div class="grid gap-3">
-                <div>
-                  <label class="text-xs font-extrabold text-gray-700">ชื่อ</label>
-                  <input id="wish_name"
-                    class="mt-1 w-full px-4 py-3 rounded-2xl border border-gray-200 outline-none focus:ring-4 focus:ring-pink-100 focus:border-pink-300"
-                    placeholder="เช่น เพื่อนเจ้าสาว">
-                </div>
-
-                <div>
-                  <div class="flex items-center justify-between">
-                    <label class="text-xs font-extrabold text-gray-700">คำอวยพร</label>
-                    <div id="wish_count" class="text-[11px] font-extrabold text-slate-400">0/250</div>
-                  </div>
-                  <textarea id="wish_msg" rows="5"
-                    class="mt-1 w-full px-4 py-3 rounded-2xl border border-gray-200 outline-none focus:ring-4 focus:ring-pink-100 focus:border-pink-300"
-                    placeholder="ขอให้รักกันยืนยาว มีความสุขมาก ๆ ✨"></textarea>
-                </div>
-              </div>
-
-              <div class="mt-4 flex gap-2">
-                <button id="wish_cancel" type="button"
-                  class="flex-1 px-4 py-3 rounded-2xl font-extrabold bg-slate-100 text-slate-700 border border-slate-200 hover:shadow-sm transition">
-                  ยกเลิก
-                </button>
-
-                <button id="wish_send" type="button"
-                  class="flex-1 px-4 py-3 rounded-2xl font-extrabold text-white border border-pink-200 hover:shadow-md transition"
-                  style="background: linear-gradient(135deg, #db2777 0%, #fb7185 100%);">
-                  ส่ง
-                </button>
-              </div>
-            </div>
+  Swal.fire({
+    title: '',
+    html: `
+      <div class="wp-wrap">
+        <div class="wp-head">
+          <div>
+            <div class="wp-title">เขียนอวยพร</div>
+            <div class="wp-sub">ฝากข้อความถึง Palmy & Sumo</div>
           </div>
-        `,
-        showConfirmButton:false,
-        showCloseButton:false,
-        didOpen: ()=>{
-          const nameEl = document.getElementById('wish_name');
-          const msgEl  = document.getElementById('wish_msg');
-          const countEl= document.getElementById('wish_count');
 
-          const updateCount = ()=>{
-            const n = msgEl.value.length;
-            countEl.textContent = `${n}/250`;
-            if(n > 250) countEl.classList.add('text-rose-600');
-            else countEl.classList.remove('text-rose-600');
-          };
-          msgEl.addEventListener('input', updateCount);
-          updateCount();
+          <button class="wp-close" onclick="Swal.close()" aria-label="close">✕</button>
+        </div>
 
-          document.getElementById('wish_cancel').onclick = ()=>Swal.close();
+        <div class="wp-box">
+          <div>
+            <label>ชื่อ</label>
+            <input id="wp_name" placeholder="เช่น เพื่อนเจ้าสาว">
+          </div>
 
-          document.getElementById('wish_send').onclick = async ()=>{
-            const name = nameEl.value.trim();
-            const message = msgEl.value.trim();
+          <div>
+            <label>คำอวยพร</label>
+            <textarea id="wp_msg" placeholder="ขอให้มีความสุขมาก ๆ ✨"></textarea>
+            <div id="wp_count" class="wp-count">0 / 250</div>
+          </div>
+        </div>
 
-            if(!name || !message){
-              Swal.fire({icon:'warning', title:'กรอกให้ครบ', text:'ชื่อและคำอวยพร', confirmButtonColor:'#db2777', customClass:{popup:'rounded-[22px]'}});
-              return;
-            }
-            if(message.length > 250){
-              Swal.fire({icon:'warning', title:'ยาวไปนิดนึง', text:'ไม่เกิน 250 ตัวอักษร', confirmButtonColor:'#db2777', customClass:{popup:'rounded-[22px]'}});
-              return;
-            }
+        <div class="wp-actions">
+          <button class="wp-btn" id="wp_cancel">ยกเลิก</button>
+          <button class="wp-btn send" id="wp_send">ส่งอวยพร</button>
+        </div>
+      </div>
+    `,
+    showConfirmButton:false,
+    showCloseButton:false,
+    customClass:{ popup:'wishpop' },
+    didOpen: ()=>{
+      const nameEl = document.getElementById('wp_name');
+      const msgEl  = document.getElementById('wp_msg');
+      const cntEl  = document.getElementById('wp_count');
 
-            const res = await fetch('/api/wish', {
-              method:'POST',
-              headers:{'Content-Type':'application/json'},
-              body: JSON.stringify({ name, message })
-            });
-            const out = await res.json();
+      const updateCount = ()=>{
+        const n = msgEl.value.length;
+        cntEl.textContent = `${n} / 250`;
+        cntEl.style.color = n > 250 ? '#e11d48' : '';
+      };
+      msgEl.addEventListener('input', updateCount);
+      updateCount();
 
-            if(!out.success){
-              Swal.fire({icon:'error', title:'ส่งไม่สำเร็จ', text:(out.message || out.error || 'ลองใหม่'), confirmButtonColor:'#db2777', customClass:{popup:'rounded-[22px]'}});
-              return;
-            }
+      document.getElementById('wp_cancel').onclick = ()=>Swal.close();
 
-            await loadWishes();
-            Swal.fire({
-              icon:'success',
-              title:'ขอบคุณ 💖',
-              text:'ส่งเรียบร้อย',
-              confirmButtonColor:'#db2777',
-              customClass:{popup:'rounded-[22px]'}
-            }).then(()=>Swal.close());
-          };
+      document.getElementById('wp_send').onclick = async ()=>{
+        const name = nameEl.value.trim();
+        const message = msgEl.value.trim();
+
+        if(!name || !message){
+          Swal.fire({
+            icon:'warning',
+            title:'กรอกให้ครบ',
+            text:'ชื่อและคำอวยพร',
+            confirmButtonColor:'#db2777'
+          });
+          return;
         }
-      });
+        if(message.length > 250){
+          Swal.fire({
+            icon:'warning',
+            title:'ข้อความยาวเกิน',
+            text:'ไม่เกิน 250 ตัวอักษร',
+            confirmButtonColor:'#db2777'
+          });
+          return;
+        }
+
+        const res = await fetch('/api/wish',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ name, message })
+        });
+        const out = await res.json();
+
+        if(!out.success){
+          Swal.fire({
+            icon:'error',
+            title:'ส่งไม่สำเร็จ',
+            text:(out.message || out.error || 'ลองใหม่อีกครั้ง'),
+            confirmButtonColor:'#db2777'
+          });
+          return;
+        }
+
+        await loadWishes();
+        Swal.fire({
+          icon:'success',
+          title:'ขอบคุณ 💖',
+          text:'ส่งอวยพรเรียบร้อย',
+          confirmButtonColor:'#db2777'
+        }).then(()=>Swal.close());
+      };
     }
+  });
+}
+
 
     // -----------------------------
     // Admin login -> turn on admin mode
