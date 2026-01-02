@@ -114,7 +114,7 @@
       left:50%;
       transform:translateX(-50%);
       padding:2px 6px;
-      font-size:5px;
+      font-size:6.5px;
       font-weight:400;
       border-radius:999px;
       background:rgba(255,255,255,.88);
@@ -137,7 +137,7 @@
     @media (max-width:640px){
       .table-hotspot{ width:25px; height:25px; }
       .table-num{ font-size:6px; }
-      .table-label{ font-size:5px; padding:2px 5px; top:-9px; max-width:84px; }
+      .table-label{ font-size:6.5px; padding:2px 5px; top:-9px; max-width:84px; }
       .table-tap-hint{ font-size:4px; }
     }
 
@@ -465,329 +465,268 @@
     }
 
     /* =========================
-   MOBILE TABLE POPUP (8px)
-   ========================= */
-.swal2-popup.tblpop{
-  border-radius:22px !important;
-  overflow:hidden;
-}
+       MOBILE TABLE POPUP (8px)
+       ========================= */
+    .swal2-popup.tblpop{
+      border-radius:22px !important;
+      overflow:hidden;
+    }
+    .tblpop, .tblpop *{
+      font-size:8px !important;
+      line-height:1.25 !important;
+    }
+    .tblpop .tp-wrap{ padding:10px; }
+    .tblpop .tp-head{
+      display:flex; align-items:center; justify-content:space-between; gap:8px;
+      margin-bottom:8px;
+    }
+    .tblpop .tp-title{
+      min-width:0;
+      display:flex; flex-direction:column; gap:4px;
+    }
+    .tblpop .tp-title .name{
+      font-size:11px !important;
+      font-weight:900;
+      line-height:1.25;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .tblpop .tp-badges{ display:flex; flex-wrap:wrap; gap:6px; }
+    .tblpop .tp-badge{
+      display:inline-flex; align-items:center; gap:4px;
+      padding:4px 8px; border-radius:999px;
+      border:1px solid rgba(226,232,240,.95);
+      background:rgba(255,255,255,.85);
+    }
+    .tblpop .tp-close{
+      width:34px; height:34px; border-radius:12px;
+      border:1px solid rgba(226,232,240,.95);
+      background:#fff;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .tblpop .tp-list{
+      border:1px solid rgba(226,232,240,.95);
+      border-radius:16px;
+      overflow:auto;
+      max-height:58vh;
+      background:rgba(255,255,255,.75);
+    }
+    .tblpop .tp-row{
+      display:flex; gap:8px; align-items:center; justify-content:space-between;
+      padding:10px;
+      border-bottom:1px solid rgba(226,232,240,.8);
+    }
+    .tblpop .tp-row:last-child{ border-bottom:none; }
+    .tblpop .tp-left{ min-width:0; }
+    .tblpop .tp-seat{
+      font-size:5.5px !important;
+      font-weight:500;
+      letter-spacing:.1em;
+      opacity:.45;
+    }
+    .tblpop .tp-guest{
+      margin-top:4px;
+      font-weight:900;
+      overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    }
+    .tblpop .tp-tags{ margin-top:4px; display:flex; flex-wrap:wrap; gap:6px; }
+    .tblpop .tp-tag{
+      display:inline-flex; align-items:center; gap:4px;
+      padding:3px 8px; border-radius:999px;
+      border:1px solid rgba(226,232,240,.95);
+      background:rgba(255,255,255,.9);
+      opacity:.9;
+    }
+    .tblpop .tp-tag.red{
+      background:rgba(254,242,242,.95);
+      border-color:rgba(254,202,202,.95);
+      color:#991b1b;
+    }
+    .tblpop .tp-right{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
+    .tblpop .tp-pill{
+      padding:4px 8px; border-radius:999px;
+      border:1px solid rgba(226,232,240,.95);
+      font-weight:900;
+      background:#fff;
+    }
+    .tblpop .tp-pill.ok{ background:#ecfdf5; color:#065f46; border-color:rgba(16,185,129,.25); }
+    .tblpop .tp-pill.bad{ background:#fff1f2; color:#9f1239; border-color:rgba(251,113,133,.35); }
+    .tblpop .tp-pill.arr{ background:#eef2ff; color:#3730a3; border-color:rgba(99,102,241,.25); }
 
-/* ทุกอย่าง 8px จริง */
-.tblpop, .tblpop *{
-  font-size:8px !important;
-  line-height:1.25 !important;
-}
+    .tblpop .tp-btn{
+      padding:6px 10px;
+      border-radius:12px;
+      border:1px solid rgba(226,232,240,.95);
+      font-weight:900;
+      background:#fff;
+    }
+    .tblpop .tp-btn.reg{
+      color:#fff;
+      background:linear-gradient(135deg,#16a34a 0%,#34d399 100%);
+      border-color:rgba(16,185,129,.25);
+    }
+    .tblpop .tp-btn.arrive{
+      color:#fff;
+      background:linear-gradient(135deg,#db2777 0%, #fb7185 100%);
+      border-color:rgba(219,39,119,.25);
+    }
+    .tblpop .tp-btn.edit{ background:#fff; }
+    .tblpop .tp-btn.danger{
+      background:#fff1f2;
+      color:#9f1239;
+      border-color:rgba(254,202,202,.95);
+    }
+    .tblpop .tp-btn.disabled{
+      background:#f1f5f9; color:#94a3b8;
+      cursor:not-allowed;
+    }
 
-/* โครง popup */
-.tblpop .tp-wrap{ padding:10px; }
-.tblpop .tp-head{
-  display:flex; align-items:center; justify-content:space-between; gap:8px;
-  margin-bottom:8px;
-}
-.tblpop .tp-title{
-  min-width:0;
-  display:flex; flex-direction:column; gap:4px;
-}
-.tblpop .tp-title .name{
-  font-size:11px !important;   /* 🔥 ใหญ่ขึ้น */
-  font-weight:900;
-  line-height:1.25;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-.tblpop .tp-badges{ display:flex; flex-wrap:wrap; gap:6px; }
-.tblpop .tp-badge{
-  display:inline-flex; align-items:center; gap:4px;
-  padding:4px 8px; border-radius:999px;
-  border:1px solid rgba(226,232,240,.95);
-  background:rgba(255,255,255,.85);
-}
-.tblpop .tp-close{
-  width:34px; height:34px; border-radius:12px;
-  border:1px solid rgba(226,232,240,.95);
-  background:#fff;
-  display:flex; align-items:center; justify-content:center;
-}
+    .tblpop .tp-nav{
+      margin-top:10px;
+      display:flex; gap:8px;
+    }
+    .tblpop .tp-nav button{
+      flex:1;
+      padding:10px 10px;
+      border-radius:16px;
+      border:1px solid rgba(226,232,240,.95);
+      background:rgba(255,255,255,.9);
+      font-weight:900;
+    }
 
-/* list */
-.tblpop .tp-list{
-  border:1px solid rgba(226,232,240,.95);
-  border-radius:16px;
-  overflow:auto;
-  max-height:58vh;
-  background:rgba(255,255,255,.75);
-}
-.tblpop .tp-row{
-  display:flex; gap:8px; align-items:center; justify-content:space-between;
-  padding:10px;
-  border-bottom:1px solid rgba(226,232,240,.8);
-}
-.tblpop .tp-row:last-child{ border-bottom:none; }
-.tblpop .tp-left{ min-width:0; }
-.tblpop .tp-seat{
-  font-size:5.5px !important;
-  font-weight:500;
-  letter-spacing:.1em;
-  opacity:.45;
-}
-.tblpop .tp-guest{
-  margin-top:4px;
-  font-weight:900;
-  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-}
-.tblpop .tp-tags{ margin-top:4px; display:flex; flex-wrap:wrap; gap:6px; }
-.tblpop .tp-tag{
-  display:inline-flex; align-items:center; gap:4px;
-  padding:3px 8px; border-radius:999px;
-  border:1px solid rgba(226,232,240,.95);
-  background:rgba(255,255,255,.9);
-  opacity:.9;
-}
-.tblpop .tp-tag.red{
-  background:rgba(254,242,242,.95);
-  border-color:rgba(254,202,202,.95);
-  color:#991b1b;
-}
+    /* =========================
+       WISH POPUP (MOBILE / 8px)
+       ========================= */
+    .swal2-popup.wishpop{
+      border-radius:22px !important;
+      overflow:hidden;
+    }
+    .wishpop, .wishpop *{
+      font-size:8px !important;
+      line-height:1.25 !important;
+    }
+    .wishpop .wp-wrap{ padding:12px; }
+    .wishpop .wp-head{
+      display:flex; align-items:center; justify-content:space-between; gap:8px;
+      margin-bottom:10px;
+    }
+    .wishpop .wp-title{ font-weight:900; }
+    .wishpop .wp-sub{ margin-top:2px; opacity:.6; }
+    .wishpop .wp-close{
+      width:32px; height:32px;
+      border-radius:12px;
+      border:1px solid rgba(226,232,240,.95);
+      background:#fff;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .wishpop .wp-box{
+      border:1px solid rgba(226,232,240,.95);
+      border-radius:16px;
+      padding:10px;
+      background:rgba(255,255,255,.9);
+      display:grid;
+      gap:8px;
+    }
+    .wishpop label{ font-weight:700; opacity:.8; }
+    .wishpop input, .wishpop textarea{
+      width:100%;
+      border-radius:12px;
+      border:1px solid rgba(226,232,240,.95);
+      padding:8px 10px;
+      outline:none;
+      resize:none;
+    }
+    .wishpop textarea{ min-height:80px; }
+    .wishpop .wp-count{ text-align:right; opacity:.6; }
+    .wishpop .wp-actions{
+      margin-top:10px;
+      display:flex;
+      gap:8px;
+    }
+    .wishpop .wp-btn{
+      flex:1;
+      padding:10px;
+      border-radius:14px;
+      border:1px solid rgba(226,232,240,.95);
+      font-weight:900;
+      background:#fff;
+    }
+    .wishpop .wp-btn.send{
+      color:#fff;
+      background:linear-gradient(135deg,#db2777 0%, #fb7185 100%);
+      border-color:rgba(219,39,119,.25);
+    }
 
-/* right side */
-.tblpop .tp-right{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
-.tblpop .tp-pill{
-  padding:4px 8px; border-radius:999px;
-  border:1px solid rgba(226,232,240,.95);
-  font-weight:900;
-  background:#fff;
-}
-.tblpop .tp-pill.ok{ background:#ecfdf5; color:#065f46; border-color:rgba(16,185,129,.25); }
-.tblpop .tp-pill.bad{ background:#fff1f2; color:#9f1239; border-color:rgba(251,113,133,.35); }
-.tblpop .tp-pill.arr{ background:#eef2ff; color:#3730a3; border-color:rgba(99,102,241,.25); }
-
-/* buttons */
-.tblpop .tp-btn{
-  padding:6px 10px;
-  border-radius:12px;
-  border:1px solid rgba(226,232,240,.95);
-  font-weight:900;
-  background:#fff;
-}
-.tblpop .tp-btn.reg{
-  color:#fff;
-  background:linear-gradient(135deg,#16a34a 0%,#34d399 100%);
-  border-color:rgba(16,185,129,.25);
-}
-.tblpop .tp-btn.arrive{
-  color:#fff;
-  background:linear-gradient(135deg,#db2777 0%, #fb7185 100%);
-  border-color:rgba(219,39,119,.25);
-}
-.tblpop .tp-btn.edit{
-  background:#fff;
-}
-.tblpop .tp-btn.danger{
-  background:#fff1f2;
-  color:#9f1239;
-  border-color:rgba(254,202,202,.95);
-}
-.tblpop .tp-btn.disabled{
-  background:#f1f5f9; color:#94a3b8;
-  cursor:not-allowed;
-}
-
-/* footer nav */
-.tblpop .tp-nav{
-  margin-top:10px;
-  display:flex; gap:8px;
-}
-.tblpop .tp-nav button{
-  flex:1;
-  padding:10px 10px;
-  border-radius:16px;
-  border:1px solid rgba(226,232,240,.95);
-  background:rgba(255,255,255,.9);
-  font-weight:900;
-}
-/* =========================
-   WISH POPUP (MOBILE / 8px)
-   ========================= */
-.swal2-popup.wishpop{
-  border-radius:22px !important;
-  overflow:hidden;
-}
-
-/* ทุกอย่างไม่เกิน 8px */
-.wishpop,
-.wishpop *{
-  font-size:8px !important;
-  line-height:1.25 !important;
-}
-
-/* layout */
-.wishpop .wp-wrap{ padding:12px; }
-.wishpop .wp-head{
-  display:flex; align-items:center; justify-content:space-between; gap:8px;
-  margin-bottom:10px;
-}
-.wishpop .wp-title{
-  font-weight:900;
-}
-.wishpop .wp-sub{
-  margin-top:2px;
-  opacity:.6;
-}
-.wishpop .wp-close{
-  width:32px; height:32px;
-  border-radius:12px;
-  border:1px solid rgba(226,232,240,.95);
-  background:#fff;
-  display:flex; align-items:center; justify-content:center;
-}
-
-/* form */
-.wishpop .wp-box{
-  border:1px solid rgba(226,232,240,.95);
-  border-radius:16px;
-  padding:10px;
-  background:rgba(255,255,255,.9);
-  display:grid;
-  gap:8px;
-}
-.wishpop label{
-  font-weight:700;
-  opacity:.8;
-}
-.wishpop input,
-.wishpop textarea{
-  width:100%;
-  border-radius:12px;
-  border:1px solid rgba(226,232,240,.95);
-  padding:8px 10px;
-  outline:none;
-  resize:none;
-}
-.wishpop textarea{ min-height:80px; }
-
-.wishpop .wp-count{
-  text-align:right;
-  opacity:.6;
-}
-
-/* buttons */
-.wishpop .wp-actions{
-  margin-top:10px;
-  display:flex;
-  gap:8px;
-}
-.wishpop .wp-btn{
-  flex:1;
-  padding:10px;
-  border-radius:14px;
-  border:1px solid rgba(226,232,240,.95);
-  font-weight:900;
-  background:#fff;
-}
-.wishpop .wp-btn.send{
-  color:#fff;
-  background:linear-gradient(135deg,#db2777 0%, #fb7185 100%);
-  border-color:rgba(219,39,119,.25);
-}
-/* =========================
-   REGISTER POPUP (MOBILE / 8px)
-   ========================= */
-.swal2-popup.regpop{
-  border-radius:22px !important;
-  overflow:hidden;
-}
-
-/* ทุกอย่างไม่เกิน 8px */
-.regpop,
-.regpop *{
-  font-size:8px !important;
-  line-height:1.25 !important;
-}
-
-/* layout */
-.regpop .rp-wrap{ padding:12px; }
-.regpop .rp-head{
-  display:flex; align-items:center; justify-content:space-between; gap:8px;
-  margin-bottom:10px;
-}
-.regpop .rp-title{
-  font-weight:900;
-}
-.regpop .rp-sub{
-  margin-top:2px;
-  opacity:.6;
-}
-.regpop .rp-close{
-  width:32px; height:32px;
-  border-radius:12px;
-  border:1px solid rgba(226,232,240,.95);
-  background:#fff;
-  display:flex; align-items:center; justify-content:center;
-}
-
-/* form box */
-.regpop .rp-box{
-  border:1px solid rgba(226,232,240,.95);
-  border-radius:16px;
-  padding:10px;
-  background:rgba(255,255,255,.9);
-  display:grid;
-  gap:8px;
-}
-
-.regpop label{
-  font-weight:700;
-  opacity:.8;
-}
-
-.regpop input,
-.regpop textarea,
-.regpop select{
-  width:100%;
-  border-radius:12px;
-  border:1px solid rgba(226,232,240,.95);
-  padding:8px 10px;
-  outline:none;
-}
-
-.regpop textarea{ resize:none; }
-
-/* summary */
-.regpop .rp-summary{
-  display:inline-flex;
-  padding:4px 8px;
-  border-radius:999px;
-  border:1px solid rgba(226,232,240,.95);
-  background:rgba(255,255,255,.85);
-  font-weight:900;
-}
-
-/* hint */
-.regpop .rp-hint{
-  opacity:.6;
-}
-
-/* buttons */
-.regpop .rp-actions{
-  margin-top:10px;
-  display:flex;
-  gap:8px;
-}
-.regpop .rp-btn{
-  flex:1;
-  padding:10px;
-  border-radius:14px;
-  border:1px solid rgba(226,232,240,.95);
-  font-weight:900;
-  background:#fff;
-}
-.regpop .rp-btn.send{
-  color:#fff;
-  background:linear-gradient(135deg,#16a34a 0%, #34d399 100%);
-  border-color:rgba(16,185,129,.25);
-}
-
+    /* =========================
+       REGISTER POPUP (MOBILE / 8px)
+       ========================= */
+    .swal2-popup.regpop{
+      border-radius:22px !important;
+      overflow:hidden;
+    }
+    .regpop, .regpop *{
+      font-size:8px !important;
+      line-height:1.25 !important;
+    }
+    .regpop .rp-wrap{ padding:12px; }
+    .regpop .rp-head{
+      display:flex; align-items:center; justify-content:space-between; gap:8px;
+      margin-bottom:10px;
+    }
+    .regpop .rp-title{ font-weight:900; }
+    .regpop .rp-sub{ margin-top:2px; opacity:.6; }
+    .regpop .rp-close{
+      width:32px; height:32px;
+      border-radius:12px;
+      border:1px solid rgba(226,232,240,.95);
+      background:#fff;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .regpop .rp-box{
+      border:1px solid rgba(226,232,240,.95);
+      border-radius:16px;
+      padding:10px;
+      background:rgba(255,255,255,.9);
+      display:grid;
+      gap:8px;
+    }
+    .regpop label{ font-weight:700; opacity:.8; }
+    .regpop input, .regpop textarea, .regpop select{
+      width:100%;
+      border-radius:12px;
+      border:1px solid rgba(226,232,240,.95);
+      padding:8px 10px;
+      outline:none;
+    }
+    .regpop textarea{ resize:none; }
+    .regpop .rp-summary{
+      display:inline-flex;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(226,232,240,.95);
+      background:rgba(255,255,255,.85);
+      font-weight:900;
+    }
+    .regpop .rp-hint{ opacity:.6; }
+    .regpop .rp-actions{
+      margin-top:10px;
+      display:flex;
+      gap:8px;
+    }
+    .regpop .rp-btn{
+      flex:1;
+      padding:10px;
+      border-radius:14px;
+      border:1px solid rgba(226,232,240,.95);
+      font-weight:900;
+      background:#fff;
+    }
+    .regpop .rp-btn.send{
+      color:#fff;
+      background:linear-gradient(135deg,#16a34a 0%, #34d399 100%);
+      border-color:rgba(16,185,129,.25);
+    }
   </style>
 </head>
 
@@ -800,7 +739,7 @@
     </div>
   </div>
 
-  <!-- ✅ Wish Wall ท้ายหน้า (ต้องมี id="wishList" เพื่อให้ JS ใส่ข้อมูลได้) -->
+  <!-- ✅ Wish Wall ท้ายหน้า -->
   <section class="wish-wall" aria-label="Wish wall">
     <div class="wish-head">
       <div class="wish-title">
@@ -938,137 +877,141 @@
     }
 
     function openTable(tn) {
-  SELECTED_TABLE = tn;
-  render();
+      SELECTED_TABLE = tn;
+      render();
 
-  const t = TABLES.find(x => Number(x.table_number) === tn) || {};
-  const seats = (t.seats || []);
+      const t = TABLES.find(x => Number(x.table_number) === tn) || {};
+      const seats = (t.seats || []);
 
-  const bookedCount = seats.filter(s =>
-    (String(s.status || '').toLowerCase() === 'booked') &&
-    String(s.guest_name || '').trim()
-  ).length;
+      const bookedCount = seats.filter(s =>
+        (String(s.status || '').toLowerCase() === 'booked') &&
+        String(s.guest_name || '').trim()
+      ).length;
 
-  const emptyCount = 10 - bookedCount;
-  const statusText = emptyCount === 0 ? 'เต็มแล้ว' : `${emptyCount} ที่`;
+      const emptyCount = 10 - bookedCount;
+      const statusText = emptyCount === 0 ? 'เต็มแล้ว' : `${emptyCount} ที่`;
 
+      const tableLabel = (t.table_name && t.table_name.trim().length)
+        ? t.table_name.trim()
+        : `โต๊ะ ${tn}`;
 
-  const tableLabel = (t.table_name && t.table_name.trim().length)
-    ? t.table_name.trim()
-    : `โต๊ะ ${tn}`;
+      const listHtml = seats.map(s => {
+        const seatId = s.id || '';
+        const seatNo = s.seat_number;
 
-  const listHtml = seats.map(s => {
-    const seatId = s.id || '';
-    const seatNo = s.seat_number;
+        const name = String(s.guest_name || '').trim();
+        const intro = String(s.guest_intro || '').trim();
+        const tag = String(s.guest_tag || '').trim();
+        const gift = String(s.guest_gift_amount || '').trim();
 
-    const name = String(s.guest_name || '').trim();
-    const intro = String(s.guest_intro || '').trim();
-    const tag = String(s.guest_tag || '').trim();
-    const gift = String(s.guest_gift_amount || '').trim();
+        const reserved = String(s.reserved_for || '').trim();
 
-    const reserved = String(s.reserved_for || '').trim();
+        const isBooked = String(s.status || '').toLowerCase() === 'booked' && name.length;
+        const isAvailable = String(s.status || '').toLowerCase() === 'available';
+        const arrived = s.arrived === true;
 
-    const isBooked = String(s.status || '').toLowerCase() === 'booked' && name.length;
-    const isAvailable = String(s.status || '').toLowerCase() === 'available';
-    const arrived = s.arrived === true;
+        // pill
+        const pill = isBooked && arrived
+          ? `<span class="tp-pill arr">มาถึงแล้ว</span>`
+          : ``;
 
-    // pill
-   const pill = isBooked && arrived
-  ? `<span class="tp-pill arr">มาถึงแล้ว</span>`
-  : ``;
+        // actions
+        let actionBtn = '';
+        if (isBooked) {
+          actionBtn = arrived
+            ? `<button class="tp-btn disabled" disabled>ยืนยันแล้ว</button>`
+            : `<button class="tp-btn arrive"
+                 onclick="confirmArrival('${escapeAttr(seatId)}', ${tn}, ${seatNo})">ยืนยันมาถึง</button>`;
+        } else {
+          actionBtn = seatId
+            ? `<button class="tp-btn reg" onclick="goRegister(${tn}, '${escapeAttr(seatId)}')">ลงทะเบียน</button>`
+            : `<button class="tp-btn disabled" disabled>ยังไม่พร้อม</button>`;
+        }
 
-    // actions
-    let actionBtn = '';
-    if (isBooked) {
-      actionBtn = arrived
-        ? `<button class="tp-btn disabled" disabled>ยืนยันแล้ว</button>`
-        : `<button class="tp-btn arrive"
-             onclick="confirmArrival('${escapeAttr(seatId)}', ${tn}, ${seatNo})">ยืนยันมาถึง</button>`;
-    } else {
-      actionBtn = seatId
-        ? `<button class="tp-btn reg" onclick="goRegister(${tn}, '${escapeAttr(seatId)}')">ลงทะเบียน</button>`
-        : `<button class="tp-btn disabled" disabled>ยังไม่พร้อม</button>`;
-    }
+        // admin actions
+        const editGuestBtn = (ADMIN_MODE && isBooked && s.guest_id)
+          ? `<button class="tp-btn edit" onclick="editGuest('${escapeAttr(s.guest_id)}', ${tn})">แก้</button>`
+          : '';
 
-    // admin actions
-    const editGuestBtn = (ADMIN_MODE && isBooked && s.guest_id)
-      ? `<button class="tp-btn edit" onclick="editGuest('${escapeAttr(s.guest_id)}', ${tn})">แก้</button>`
-      : '';
+        // ✅ NEW: move seat button (admin + booked only)
+        const moveSeatBtn = (ADMIN_MODE && isBooked && seatId)
+          ? `<button class="tp-btn edit" onclick="openMoveSeatPopup('${escapeAttr(seatId)}', ${tn}, ${seatNo})">ย้าย</button>`
+          : '';
 
-    const reserveSeatBtn = (ADMIN_MODE && isAvailable && seatId)
-      ? `<button class="tp-btn edit" onclick="editSeatReserve('${escapeAttr(seatId)}', ${tn}, '${escapeAttr(reserved)}')">จอง</button>`
-      : '';
+        const reserveSeatBtn = (ADMIN_MODE && isAvailable && seatId)
+          ? `<button class="tp-btn edit" onclick="editSeatReserve('${escapeAttr(seatId)}', ${tn}, '${escapeAttr(reserved)}')">จอง</button>`
+          : '';
 
-    const clearReserveBtn = (ADMIN_MODE && isAvailable && seatId && reserved)
-      ? `<button class="tp-btn danger" onclick="clearSeatReserve('${escapeAttr(seatId)}', ${tn})">ล้าง</button>`
-      : '';
+        const clearReserveBtn = (ADMIN_MODE && isAvailable && seatId && reserved)
+          ? `<button class="tp-btn danger" onclick="clearSeatReserve('${escapeAttr(seatId)}', ${tn})">ล้าง</button>`
+          : '';
 
-    // tags (left)
-    const tags = [];
-    if (!isBooked && reserved) tags.push(`<span class="tp-tag red">🏷️ จองไว้: ${escapeHtml(reserved)}</span>`);
-    if (isBooked && intro) tags.push(`<span class="tp-tag">✨ ${escapeHtml(intro)}</span>`);
-    if (isBooked && tag) tags.push(`<span class="tp-tag">🏷️ ${escapeHtml(tag)}</span>`);
-    if (isBooked && gift) tags.push(`<span class="tp-tag">💵 ${escapeHtml(gift)}</span>`);
+        // tags (left)
+        const tags = [];
+        if (!isBooked && reserved) tags.push(`<span class="tp-tag red">🏷️ จองไว้: ${escapeHtml(reserved)}</span>`);
+        if (isBooked && intro) tags.push(`<span class="tp-tag">✨ ${escapeHtml(intro)}</span>`);
+        if (isBooked && tag) tags.push(`<span class="tp-tag">🏷️ ${escapeHtml(tag)}</span>`);
+        if (isBooked && gift) tags.push(`<span class="tp-tag">💵 ${escapeHtml(gift)}</span>`);
 
-    return `
-      <div class="tp-row">
-        <div class="tp-left">
-          <div class="tp-seat">SEAT ${seatNo}</div>
-          ${name ? `<div class="tp-guest">${escapeHtml(name)}</div>` : ``}
-          ${tags.length ? `<div class="tp-tags">${tags.join('')}</div>` : ``}
-        </div>
+        return `
+          <div class="tp-row">
+            <div class="tp-left">
+              <div class="tp-seat">SEAT ${seatNo}</div>
+              ${name ? `<div class="tp-guest">${escapeHtml(name)}</div>` : ``}
+              ${tags.length ? `<div class="tp-tags">${tags.join('')}</div>` : ``}
+            </div>
 
-        <div class="tp-right">
-          ${pill}
-          ${actionBtn}
-          ${editGuestBtn}
-          ${reserveSeatBtn}
-          ${clearReserveBtn}
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  Swal.fire({
-    title: '',
-    html: `
-      <div class="tp-wrap">
-        <div class="tp-head">
-          <div class="tp-title">
-            <div class="name">${escapeHtml(tableLabel)}</div>
-            <div class="tp-badges">
-              <span class="tp-badge">สถานะ: <b>${escapeHtml(statusText)}</b></span>
-              <span class="tp-badge">โต๊ะ #<b>${tn}</b></span>
-              ${ADMIN_MODE ? `<button class="tp-btn edit" onclick="editTableName(${tn})">ชื่อโต๊ะ</button>` : ``}
+            <div class="tp-right">
+              ${pill}
+              ${actionBtn}
+              ${editGuestBtn}
+              ${moveSeatBtn}
+              ${reserveSeatBtn}
+              ${clearReserveBtn}
             </div>
           </div>
+        `;
+      }).join('');
 
-          <button class="tp-close" onclick="Swal.close()" aria-label="close">✕</button>
-        </div>
+      Swal.fire({
+        title: '',
+        html: `
+          <div class="tp-wrap">
+            <div class="tp-head">
+              <div class="tp-title">
+                <div class="name">${escapeHtml(tableLabel)}</div>
+                <div class="tp-badges">
+                  <span class="tp-badge">สถานะ: <b>${escapeHtml(statusText)}</b></span>
+                  <span class="tp-badge">โต๊ะ #<b>${tn}</b></span>
+                  ${ADMIN_MODE ? `<button class="tp-btn edit" onclick="editTableName(${tn})">ชื่อโต๊ะ</button>` : ``}
+                </div>
+              </div>
 
-        <div class="tp-list">
-          ${listHtml || `<div style="padding:10px; opacity:.7;">ไม่มีข้อมูลที่นั่ง</div>`}
-        </div>
+              <button class="tp-close" onclick="Swal.close()" aria-label="close">✕</button>
+            </div>
 
-        <div class="tp-nav">
-          <button id="btnPrev">◀ โต๊ะก่อนหน้า</button>
-          <button id="btnNext">โต๊ะถัดไป ▶</button>
-        </div>
-      </div>
-    `,
-    showConfirmButton: false,
-    showCloseButton: false,
-    customClass: { popup: 'tblpop' },   // ✅ ใช้คลาสใหม่ (8px ทั้งหมด)
-    willClose: () => { SELECTED_TABLE = null; render(); },
-    didOpen: () => {
-      const p = document.getElementById('btnPrev');
-      const n = document.getElementById('btnNext');
-      if (p) p.onclick = () => switchTable(tn <= 1 ? 32 : tn - 1);
-      if (n) n.onclick = () => switchTable(tn >= 32 ? 1 : tn + 1);
+            <div class="tp-list">
+              ${listHtml || `<div style="padding:10px; opacity:.7;">ไม่มีข้อมูลที่นั่ง</div>`}
+            </div>
+
+            <div class="tp-nav">
+              <button id="btnPrev">◀ โต๊ะก่อนหน้า</button>
+              <button id="btnNext">โต๊ะถัดไป ▶</button>
+            </div>
+          </div>
+        `,
+        showConfirmButton: false,
+        showCloseButton: false,
+        customClass: { popup: 'tblpop' },
+        willClose: () => { SELECTED_TABLE = null; render(); },
+        didOpen: () => {
+          const p = document.getElementById('btnPrev');
+          const n = document.getElementById('btnNext');
+          if (p) p.onclick = () => switchTable(tn <= 1 ? 32 : tn - 1);
+          if (n) n.onclick = () => switchTable(tn >= 32 ? 1 : tn + 1);
+        }
+      });
     }
-  });
-}
-
 
     function switchTable(next){
       Swal.close();
@@ -1286,377 +1229,471 @@
     window.goRegister = (tableNum, seatId) => openRegisterPopup(tableNum, seatId);
 
     async function openRegisterPopup(preTable=null, preSeatId=null){
-  if(!TABLES || !TABLES.length){
-    await loadTables();
-  }
-
-  const tables = TABLES || [];
-  const tableOptions =
-    `<option value="">— เลือกโต๊ะ —</option>` +
-    tables.map(t=>{
-      const label = t.table_name && t.table_name.trim()
-        ? `โต๊ะ ${t.table_number} ${t.table_name.trim()}`
-        : `โต๊ะ ${t.table_number}`;
-      return `<option value="${t.table_number}">${escapeHtml(label)}</option>`;
-    }).join('');
-
-  Swal.fire({
-    title:'',
-    html:`
-      <div class="rp-wrap">
-        <div class="rp-head">
-          <div>
-            <div class="rp-title">ลงทะเบียนแขก</div>
-            <div class="rp-sub">เลือกโต๊ะและที่นั่ง</div>
-          </div>
-          <button class="rp-close" onclick="Swal.close()" aria-label="close">✕</button>
-        </div>
-
-        <div class="rp-box">
-          <div>
-            <label>ชื่อ-นามสกุล</label>
-            <input id="rp_name" placeholder="เช่น คุณสมชาย ใจดี">
-          </div>
-
-          <div>
-            <label>แนะนำตัว</label>
-            <textarea id="rp_intro" rows="2" placeholder="เช่น เพื่อนเจ้าบ่าว / ครอบครัว"></textarea>
-          </div>
-
-          <div>
-            <label>โต๊ะ</label>
-            <select id="rp_table">${tableOptions}</select>
-          </div>
-
-          <div>
-            <label>ที่นั่ง</label>
-            <select id="rp_seat"></select>
-          </div>
-
-          <div class="flex items-center justify-between">
-            <div id="rp_hint" class="rp-hint"></div>
-            <div id="rp_summary" class="rp-summary">—</div>
-          </div>
-        </div>
-
-        <div class="rp-actions">
-          <button class="rp-btn" id="rp_cancel">ยกเลิก</button>
-          <button class="rp-btn send" id="rp_confirm">ยืนยัน</button>
-        </div>
-      </div>
-    `,
-    showConfirmButton:false,
-    showCloseButton:false,
-    customClass:{ popup:'regpop' },
-    didOpen:()=>{
-      const nameEl = document.getElementById('rp_name');
-      const introEl = document.getElementById('rp_intro');
-      const tableSel = document.getElementById('rp_table');
-      const seatSel = document.getElementById('rp_seat');
-      const hintEl = document.getElementById('rp_hint');
-      const sumEl  = document.getElementById('rp_summary');
-
-      if(preTable) tableSel.value = String(preTable);
-
-      tableSel.onchange = ()=>rebuildSeats();
-      seatSel.onchange  = ()=>updateSummary();
-
-      document.getElementById('rp_cancel').onclick = ()=>Swal.close();
-
-      document.getElementById('rp_confirm').onclick = async ()=>{
-        const name = nameEl.value.trim();
-        const intro = introEl.value.trim();
-        const seatId = seatSel.value;
-
-        if(!name || !seatId){
-          Swal.fire({
-            icon:'warning',
-            title:'กรอกไม่ครบ',
-            text:'กรุณากรอกชื่อและเลือกที่นั่ง',
-            confirmButtonColor:'#16a34a'
-          });
-          return;
-        }
-
-        const res = await fetch('/api/book',{
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({ seatId, name, intro })
-        });
-        const out = await res.json();
-
-        if(!out.success){
-          Swal.fire({
-            icon:'error',
-            title:'ลงทะเบียนไม่สำเร็จ',
-            text:(out.message || out.error || 'ลองใหม่'),
-            confirmButtonColor:'#16a34a'
-          });
-          return;
-        }
-
+      if(!TABLES || !TABLES.length){
         await loadTables();
-        Swal.fire({
-          icon:'success',
-          title:'สำเร็จ',
-          text:'ลงทะเบียนเรียบร้อย',
-          confirmButtonColor:'#16a34a'
-        }).then(()=>Swal.close());
-      };
-
-      rebuildSeats(preSeatId);
-
-      function rebuildSeats(selId=null){
-        const tableVal = tableSel.value;
-        seatSel.innerHTML = '';
-
-        if(!tableVal){
-          seatSel.disabled = true;
-          hintEl.textContent = 'เลือกโต๊ะก่อน';
-          sumEl.textContent = '—';
-          return;
-        }
-
-        const t = TABLES.find(x=>Number(x.table_number)===Number(tableVal)) || {};
-        const available = (t.seats||[]).filter(s =>
-          String(s.status||'').toLowerCase()==='available' && s.id
-        );
-
-        const ph = document.createElement('option');
-        ph.value='';
-        ph.textContent='— เลือกที่นั่ง —';
-        seatSel.appendChild(ph);
-
-        if(!available.length){
-          seatSel.disabled = true;
-          hintEl.textContent = 'โต๊ะนี้เต็ม';
-          sumEl.textContent = '—';
-          return;
-        }
-
-        seatSel.disabled = false;
-        available.forEach(s=>{
-  const opt = document.createElement('option');
-  opt.value = s.id;
-
-  const r = String(s.reserved_for || '').trim();
-
-  opt.textContent = r
-    ? `ที่นั่ง ${s.seat_number} • จอง: ${r}`
-    : `ที่นั่ง ${s.seat_number}`;
-
-  /* 🔥 เก็บสถานะป้ายจองไว้กับ option */
-  opt.dataset.reserved = r ? '1' : '';
-  opt.dataset.reservedFor = r;
-
-  seatSel.appendChild(opt);
-});
-
-
-        if(selId) seatSel.value = String(selId);
-        hintEl.textContent = `ว่าง ${available.length} ที่`;
-        updateSummary();
       }
 
-      function updateSummary(){
-        const tableVal = tableSel.value;
-        if(!tableVal){
-          sumEl.textContent='—';
-          return;
+      const tables = TABLES || [];
+      const tableOptions =
+        `<option value="">— เลือกโต๊ะ —</option>` +
+        tables.map(t=>{
+          const label = t.table_name && t.table_name.trim()
+            ? `โต๊ะ ${t.table_number} ${t.table_name.trim()}`
+            : `โต๊ะ ${t.table_number}`;
+          return `<option value="${t.table_number}">${escapeHtml(label)}</option>`;
+        }).join('');
+
+      Swal.fire({
+        title:'',
+        html:`
+          <div class="rp-wrap">
+            <div class="rp-head">
+              <div>
+                <div class="rp-title">ลงทะเบียนแขก</div>
+                <div class="rp-sub">เลือกโต๊ะและที่นั่ง</div>
+              </div>
+              <button class="rp-close" onclick="Swal.close()" aria-label="close">✕</button>
+            </div>
+
+            <div class="rp-box">
+              <div>
+                <label>ชื่อ-นามสกุล</label>
+                <input id="rp_name" placeholder="เช่น คุณสมชาย ใจดี">
+              </div>
+
+              <div>
+                <label>แนะนำตัว</label>
+                <textarea id="rp_intro" rows="2" placeholder="เช่น เพื่อนเจ้าบ่าว / ครอบครัว"></textarea>
+              </div>
+
+              <div>
+                <label>โต๊ะ</label>
+                <select id="rp_table">${tableOptions}</select>
+              </div>
+
+              <div>
+                <label>ที่นั่ง</label>
+                <select id="rp_seat"></select>
+              </div>
+
+              <div class="flex items-center justify-between">
+                <div id="rp_hint" class="rp-hint"></div>
+                <div id="rp_summary" class="rp-summary">—</div>
+              </div>
+            </div>
+
+            <div class="rp-actions">
+              <button class="rp-btn" id="rp_cancel">ยกเลิก</button>
+              <button class="rp-btn send" id="rp_confirm">ยืนยัน</button>
+            </div>
+          </div>
+        `,
+        showConfirmButton:false,
+        showCloseButton:false,
+        customClass:{ popup:'regpop' },
+        didOpen:()=>{
+          const nameEl = document.getElementById('rp_name');
+          const introEl = document.getElementById('rp_intro');
+          const tableSel = document.getElementById('rp_table');
+          const seatSel = document.getElementById('rp_seat');
+          const hintEl = document.getElementById('rp_hint');
+          const sumEl  = document.getElementById('rp_summary');
+
+          if(preTable) tableSel.value = String(preTable);
+
+          tableSel.onchange = ()=>rebuildSeats();
+          seatSel.onchange  = ()=>updateSummary();
+
+          document.getElementById('rp_cancel').onclick = ()=>Swal.close();
+
+          document.getElementById('rp_confirm').onclick = async ()=>{
+            const name = nameEl.value.trim();
+            const intro = introEl.value.trim();
+            const seatId = seatSel.value;
+
+            if(!name || !seatId){
+              Swal.fire({
+                icon:'warning',
+                title:'กรอกไม่ครบ',
+                text:'กรุณากรอกชื่อและเลือกที่นั่ง',
+                confirmButtonColor:'#16a34a'
+              });
+              return;
+            }
+
+            const res = await fetch('/api/book',{
+              method:'POST',
+              headers:{'Content-Type':'application/json'},
+              body: JSON.stringify({ seatId, name, intro })
+            });
+            const out = await res.json();
+
+            if(!out.success){
+              Swal.fire({
+                icon:'error',
+                title:'ลงทะเบียนไม่สำเร็จ',
+                text:(out.message || out.error || 'ลองใหม่'),
+                confirmButtonColor:'#16a34a'
+              });
+              return;
+            }
+
+            await loadTables();
+            Swal.fire({
+              icon:'success',
+              title:'สำเร็จ',
+              text:'ลงทะเบียนเรียบร้อย',
+              confirmButtonColor:'#16a34a'
+            }).then(()=>Swal.close());
+          };
+
+          rebuildSeats(preSeatId);
+
+          function rebuildSeats(selId=null){
+            const tableVal = tableSel.value;
+            seatSel.innerHTML = '';
+
+            if(!tableVal){
+              seatSel.disabled = true;
+              hintEl.textContent = 'เลือกโต๊ะก่อน';
+              sumEl.textContent = '—';
+              return;
+            }
+
+            const t = TABLES.find(x=>Number(x.table_number)===Number(tableVal)) || {};
+            const available = (t.seats||[]).filter(s =>
+              String(s.status||'').toLowerCase()==='available' && s.id
+            );
+
+            const ph = document.createElement('option');
+            ph.value='';
+            ph.textContent='— เลือกที่นั่ง —';
+            seatSel.appendChild(ph);
+
+            if(!available.length){
+              seatSel.disabled = true;
+              hintEl.textContent = 'โต๊ะนี้เต็ม';
+              sumEl.textContent = '—';
+              return;
+            }
+
+            seatSel.disabled = false;
+            available.forEach(s=>{
+              const opt = document.createElement('option');
+              opt.value = s.id;
+
+              const r = String(s.reserved_for || '').trim();
+              opt.textContent = r
+                ? `ที่นั่ง ${s.seat_number} • จอง: ${r}`
+                : `ที่นั่ง ${s.seat_number}`;
+
+              opt.dataset.reserved = r ? '1' : '';
+              opt.dataset.reservedFor = r;
+
+              seatSel.appendChild(opt);
+            });
+
+            if(selId) seatSel.value = String(selId);
+            hintEl.textContent = `ว่าง ${available.length} ที่`;
+            updateSummary();
+          }
+
+          function updateSummary(){
+            const tableVal = tableSel.value;
+            if(!tableVal){
+              sumEl.textContent='—';
+              return;
+            }
+            const t = TABLES.find(x=>Number(x.table_number)===Number(tableVal)) || {};
+            const label = t.table_name && t.table_name.trim()
+              ? `โต๊ะ ${t.table_number} ${t.table_name.trim()}`
+              : `โต๊ะ ${t.table_number}`;
+            const seatText = seatSel.options[seatSel.selectedIndex]
+              ? seatSel.options[seatSel.selectedIndex].textContent
+              : '';
+            sumEl.textContent = seatText ? `${label} • ${seatText}` : label;
+          }
         }
-        const t = TABLES.find(x=>Number(x.table_number)===Number(tableVal)) || {};
-        const label = t.table_name && t.table_name.trim()
-          ? `โต๊ะ ${t.table_number} ${t.table_name.trim()}`
-          : `โต๊ะ ${t.table_number}`;
-        const seatText = seatSel.options[seatSel.selectedIndex]
-          ? seatSel.options[seatSel.selectedIndex].textContent
-          : '';
-        sumEl.textContent = seatText ? `${label} • ${seatText}` : label;
-      }
+      });
     }
-  });
-}
 
+    // -----------------------------
+    // ✅ NEW: Popup Move Seat (Admin)
+    // -----------------------------
+    function openMoveSeatPopup(fromSeatId, fromTable, fromSeatNo){
+      const tableOptions =
+        `<option value="">— เลือกโต๊ะปลายทาง —</option>` +
+        (TABLES||[]).map(t=>{
+          const label = (t.table_name && t.table_name.trim())
+            ? `โต๊ะ ${t.table_number} ${t.table_name.trim()}`
+            : `โต๊ะ ${t.table_number}`;
+          return `<option value="${t.table_number}">${escapeHtml(label)}</option>`;
+        }).join('');
 
-    function rebuildSeatOptions(preSeatId=null){
-      const tableVal = document.getElementById('reg_table').value;
-      const seatSel = document.getElementById('reg_seat');
-      const hint = document.getElementById('reg_hint');
+      Swal.fire({
+        title:'',
+        html: `
+          <div class="rp-wrap">
+            <div class="rp-head">
+              <div>
+                <div class="rp-title">ย้ายที่นั่ง</div>
+                <div class="rp-sub">จาก โต๊ะ ${fromTable} ที่นั่ง ${fromSeatNo}</div>
+              </div>
+              <button class="rp-close" onclick="Swal.close()" aria-label="close">✕</button>
+            </div>
 
-      seatSel.innerHTML = '';
+            <div class="rp-box">
+              <div>
+                <label>โต๊ะปลายทาง</label>
+                <select id="mv_table">${tableOptions}</select>
+              </div>
 
-      if(!tableVal){
-        const opt = document.createElement('option');
-        opt.value = '';
-        opt.textContent = '— เลือกโต๊ะก่อน —';
-        seatSel.appendChild(opt);
-        seatSel.disabled = true;
+              <div>
+                <label>ที่นั่งปลายทาง</label>
+                <select id="mv_seat" disabled></select>
+              </div>
 
-        hint.innerHTML = `
-          <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-50 text-slate-600 border border-slate-200 font-extrabold">
-            กรุณาเลือกโต๊ะ
-          </span>
-        `;
-        seatSel.dispatchEvent(new Event('change'));
-        return;
-      }
+              <div class="flex items-center justify-between">
+                <div id="mv_hint" class="rp-hint">เลือกโต๊ะก่อน</div>
+                <div class="rp-summary" id="mv_sum">—</div>
+              </div>
 
-      const tableNum = Number(tableVal);
-      const t = TABLES.find(x=>Number(x.table_number)===tableNum) || {};
-      const available = (t.seats||[])
-        .filter(s => String(s.status||'').toLowerCase()==='available' && s.id);
+              <label class="flex items-center gap-2" style="margin-top:4px;">
+                <input type="checkbox" id="mv_reserved" style="width:14px;height:14px;">
+                <span>ย้ายป้าย “จองไว้” ตามไปด้วย</span>
+              </label>
+            </div>
 
-      const ph = document.createElement('option');
-      ph.value = '';
-      ph.textContent = '— เลือกที่นั่ง —';
-      seatSel.appendChild(ph);
+            <div class="rp-actions">
+              <button class="rp-btn" id="mv_cancel">ยกเลิก</button>
+              <button class="rp-btn send" id="mv_confirm">ยืนยันย้าย</button>
+            </div>
+          </div>
+        `,
+        showConfirmButton:false,
+        showCloseButton:false,
+        customClass:{ popup:'regpop' },
+        didOpen: ()=>{
+          const tableSel = document.getElementById('mv_table');
+          const seatSel  = document.getElementById('mv_seat');
+          const hintEl   = document.getElementById('mv_hint');
+          const sumEl    = document.getElementById('mv_sum');
 
-      if(!available.length){
-        seatSel.disabled = true;
-        hint.innerHTML = `
-          <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-100 font-extrabold">
-            โต๊ะนี้เต็มแล้ว
-          </span>
-        `;
-        seatSel.dispatchEvent(new Event('change'));
-        return;
-      }
+          document.getElementById('mv_cancel').onclick = ()=>Swal.close();
 
-      seatSel.disabled = false;
-      available.forEach(s=>{
-  const opt = document.createElement('option');
-  opt.value = s.id;
+          tableSel.onchange = ()=> rebuildTargets();
+          seatSel.onchange  = ()=> updateSum();
 
-  const r = String(s.reserved_for || '').trim();
+          document.getElementById('mv_confirm').onclick = async ()=>{
+            const toSeatId = seatSel.value;
+            const moveReserved = document.getElementById('mv_reserved').checked;
 
-  opt.textContent = r
-    ? `ที่นั่ง ${s.seat_number} • จอง: ${r}`
-    : `ที่นั่ง ${s.seat_number}`;
+            if(!tableSel.value || !toSeatId){
+              Swal.fire({icon:'warning', title:'เลือกไม่ครบ', text:'กรุณาเลือกโต๊ะและที่นั่งปลายทาง', confirmButtonColor:'#db2777'});
+              return;
+            }
 
-  /* 🔥 เก็บสถานะป้ายจองไว้กับ option */
-  opt.dataset.reserved = r ? '1' : '';
-  opt.dataset.reservedFor = r;
+            const ok = await Swal.fire({
+              icon:'question',
+              title:'ยืนยันย้ายที่นั่ง?',
+              text:`จาก โต๊ะ ${fromTable} ที่นั่ง ${fromSeatNo}`,
+              showCancelButton:true,
+              confirmButtonText:'ย้าย',
+              cancelButtonText:'ยกเลิก',
+              confirmButtonColor:'#db2777'
+            });
+            if(!ok.isConfirmed) return;
 
-  seatSel.appendChild(opt);
-});
+            const res = await fetch('/api/admin/seat/move', {
+              method:'POST',
+              headers:{'Content-Type':'application/json'},
+              body: JSON.stringify({
+                from_seat_id: fromSeatId,
+                to_seat_id: toSeatId,
+                move_reserved: moveReserved
+              })
+            });
+            const out = await res.json().catch(()=>({success:false}));
 
+            if(!out.success){
+              Swal.fire({icon:'error', title:'ย้ายไม่สำเร็จ', text:(out.message||out.error||'ลองใหม่'), confirmButtonColor:'#db2777'});
+              return;
+            }
 
-      if(preSeatId) seatSel.value = String(preSeatId);
+            await loadTables();
+            Swal.fire({icon:'success', title:'ย้ายแล้ว', text:'อัปเดตที่นั่งเรียบร้อย', confirmButtonColor:'#db2777'})
+              .then(()=>Swal.close());
+          };
 
-      hint.innerHTML = `
-        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 font-extrabold">
-          ว่าง ${available.length} ที่
-        </span>
-      `;
-      seatSel.dispatchEvent(new Event('change'));
+          function rebuildTargets(){
+            seatSel.innerHTML = '';
+            const tableVal = tableSel.value;
+
+            if(!tableVal){
+              seatSel.disabled = true;
+              hintEl.textContent = 'เลือกโต๊ะก่อน';
+              sumEl.textContent = '—';
+              return;
+            }
+
+            const t = (TABLES||[]).find(x=>Number(x.table_number)===Number(tableVal)) || {};
+            const seats = t.seats || [];
+
+            const targets = seats.filter(s => {
+              if(!s || !s.id) return false;
+              if(String(s.id) === String(fromSeatId)) return false;
+
+              const st = String(s.status||'').trim().toLowerCase();
+              const hasGuest = String(s.guest_id||'').trim().length > 0;
+              const isRealBooked = (st === 'booked' && hasGuest);
+              return !isRealBooked; // ห้ามปลายทางมีแขกจริง
+            });
+
+            const ph = document.createElement('option');
+            ph.value='';
+            ph.textContent='— เลือกที่นั่งปลายทาง —';
+            seatSel.appendChild(ph);
+
+            targets.forEach(s=>{
+              const opt = document.createElement('option');
+              opt.value = s.id;
+
+              const r = String(s.reserved_for||'').trim();
+              opt.textContent = r
+                ? `ที่นั่ง ${s.seat_number} • จอง: ${r}`
+                : `ที่นั่ง ${s.seat_number}`;
+
+              seatSel.appendChild(opt);
+            });
+
+            seatSel.disabled = targets.length === 0;
+            hintEl.textContent = targets.length ? `เลือกได้ ${targets.length} ที่` : 'โต๊ะนี้ไม่มีที่ว่างให้ย้าย';
+            updateSum();
+          }
+
+          function updateSum(){
+            const tableVal = tableSel.value;
+            if(!tableVal) { sumEl.textContent='—'; return; }
+
+            const t = (TABLES||[]).find(x=>Number(x.table_number)===Number(tableVal)) || {};
+            const label = (t.table_name && t.table_name.trim())
+              ? `โต๊ะ ${t.table_number} ${t.table_name.trim()}`
+              : `โต๊ะ ${t.table_number}`;
+
+            const seatText = seatSel.options[seatSel.selectedIndex]
+              ? seatSel.options[seatSel.selectedIndex].textContent
+              : '';
+            sumEl.textContent = seatText ? `${label} • ${seatText}` : label;
+          }
+        }
+      });
     }
 
     // -----------------------------
     // Popup: Wish
     // -----------------------------
     function openWishPopup(){
-  Swal.fire({
-    title: '',
-    html: `
-      <div class="wp-wrap">
-        <div class="wp-head">
-          <div>
-            <div class="wp-title">เขียนอวยพร</div>
-            <div class="wp-sub">ฝากข้อความถึง Palmy & Sumo</div>
+      Swal.fire({
+        title: '',
+        html: `
+          <div class="wp-wrap">
+            <div class="wp-head">
+              <div>
+                <div class="wp-title">เขียนอวยพร</div>
+                <div class="wp-sub">ฝากข้อความถึง Palmy & Sumo</div>
+              </div>
+
+              <button class="wp-close" onclick="Swal.close()" aria-label="close">✕</button>
+            </div>
+
+            <div class="wp-box">
+              <div>
+                <label>ชื่อ</label>
+                <input id="wp_name" placeholder="เช่น เพื่อนเจ้าสาว">
+              </div>
+
+              <div>
+                <label>คำอวยพร</label>
+                <textarea id="wp_msg" placeholder="ขอให้มีความสุขมาก ๆ ✨"></textarea>
+                <div id="wp_count" class="wp-count">0 / 250</div>
+              </div>
+            </div>
+
+            <div class="wp-actions">
+              <button class="wp-btn" id="wp_cancel">ยกเลิก</button>
+              <button class="wp-btn send" id="wp_send">ส่งอวยพร</button>
+            </div>
           </div>
+        `,
+        showConfirmButton:false,
+        showCloseButton:false,
+        customClass:{ popup:'wishpop' },
+        didOpen: ()=>{
+          const nameEl = document.getElementById('wp_name');
+          const msgEl  = document.getElementById('wp_msg');
+          const cntEl  = document.getElementById('wp_count');
 
-          <button class="wp-close" onclick="Swal.close()" aria-label="close">✕</button>
-        </div>
+          const updateCount = ()=>{
+            const n = msgEl.value.length;
+            cntEl.textContent = `${n} / 250`;
+            cntEl.style.color = n > 250 ? '#e11d48' : '';
+          };
+          msgEl.addEventListener('input', updateCount);
+          updateCount();
 
-        <div class="wp-box">
-          <div>
-            <label>ชื่อ</label>
-            <input id="wp_name" placeholder="เช่น เพื่อนเจ้าสาว">
-          </div>
+          document.getElementById('wp_cancel').onclick = ()=>Swal.close();
 
-          <div>
-            <label>คำอวยพร</label>
-            <textarea id="wp_msg" placeholder="ขอให้มีความสุขมาก ๆ ✨"></textarea>
-            <div id="wp_count" class="wp-count">0 / 250</div>
-          </div>
-        </div>
+          document.getElementById('wp_send').onclick = async ()=>{
+            const name = nameEl.value.trim();
+            const message = msgEl.value.trim();
 
-        <div class="wp-actions">
-          <button class="wp-btn" id="wp_cancel">ยกเลิก</button>
-          <button class="wp-btn send" id="wp_send">ส่งอวยพร</button>
-        </div>
-      </div>
-    `,
-    showConfirmButton:false,
-    showCloseButton:false,
-    customClass:{ popup:'wishpop' },
-    didOpen: ()=>{
-      const nameEl = document.getElementById('wp_name');
-      const msgEl  = document.getElementById('wp_msg');
-      const cntEl  = document.getElementById('wp_count');
+            if(!name || !message){
+              Swal.fire({
+                icon:'warning',
+                title:'กรอกให้ครบ',
+                text:'ชื่อและคำอวยพร',
+                confirmButtonColor:'#db2777'
+              });
+              return;
+            }
+            if(message.length > 250){
+              Swal.fire({
+                icon:'warning',
+                title:'ข้อความยาวเกิน',
+                text:'ไม่เกิน 250 ตัวอักษร',
+                confirmButtonColor:'#db2777'
+              });
+              return;
+            }
 
-      const updateCount = ()=>{
-        const n = msgEl.value.length;
-        cntEl.textContent = `${n} / 250`;
-        cntEl.style.color = n > 250 ? '#e11d48' : '';
-      };
-      msgEl.addEventListener('input', updateCount);
-      updateCount();
+            const res = await fetch('/api/wish',{
+              method:'POST',
+              headers:{'Content-Type':'application/json'},
+              body: JSON.stringify({ name, message })
+            });
+            const out = await res.json();
 
-      document.getElementById('wp_cancel').onclick = ()=>Swal.close();
+            if(!out.success){
+              Swal.fire({
+                icon:'error',
+                title:'ส่งไม่สำเร็จ',
+                text:(out.message || out.error || 'ลองใหม่อีกครั้ง'),
+                confirmButtonColor:'#db2777'
+              });
+              return;
+            }
 
-      document.getElementById('wp_send').onclick = async ()=>{
-        const name = nameEl.value.trim();
-        const message = msgEl.value.trim();
-
-        if(!name || !message){
-          Swal.fire({
-            icon:'warning',
-            title:'กรอกให้ครบ',
-            text:'ชื่อและคำอวยพร',
-            confirmButtonColor:'#db2777'
-          });
-          return;
+            await loadWishes();
+            Swal.fire({
+              icon:'success',
+              title:'ขอบคุณ 💖',
+              text:'ส่งอวยพรเรียบร้อย',
+              confirmButtonColor:'#db2777'
+            }).then(()=>Swal.close());
+          };
         }
-        if(message.length > 250){
-          Swal.fire({
-            icon:'warning',
-            title:'ข้อความยาวเกิน',
-            text:'ไม่เกิน 250 ตัวอักษร',
-            confirmButtonColor:'#db2777'
-          });
-          return;
-        }
-
-        const res = await fetch('/api/wish',{
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({ name, message })
-        });
-        const out = await res.json();
-
-        if(!out.success){
-          Swal.fire({
-            icon:'error',
-            title:'ส่งไม่สำเร็จ',
-            text:(out.message || out.error || 'ลองใหม่อีกครั้ง'),
-            confirmButtonColor:'#db2777'
-          });
-          return;
-        }
-
-        await loadWishes();
-        Swal.fire({
-          icon:'success',
-          title:'ขอบคุณ 💖',
-          text:'ส่งอวยพรเรียบร้อย',
-          confirmButtonColor:'#db2777'
-        }).then(()=>Swal.close());
-      };
+      });
     }
-  });
-}
-
 
     // -----------------------------
     // Admin login -> turn on admin mode
@@ -1777,7 +1814,7 @@
       if(!box) return;
 
       try{
-        const res = await fetch('/api/wishes'); // ✅ ใช้ endpoint นี้
+        const res = await fetch('/api/wishes');
         const out = await res.json();
 
         const items = (out && (out.wishes || out.data || out.items)) || out || [];
@@ -1798,7 +1835,7 @@
               <div class="wish-msg">${escapeHtml(msg)}</div>
               <div class="wish-meta">
                 <div class="wish-name">${escapeHtml(name)}</div>
-                              </div>
+              </div>
             </div>
           `;
         }).join('');
@@ -1819,9 +1856,12 @@
     window.toggleAdminMode = toggleAdminMode;
     window.adminStats = adminStats;
     window.loadWishes = loadWishes;
+
+    // ✅ NEW: expose move popup
+    window.openMoveSeatPopup = openMoveSeatPopup;
   </script>
 
-  <!-- ✅ Floating bottom bar (ติดล่างจอ) -->
+  <!-- ✅ Floating bottom bar -->
   <div class="bottom-actions no-scrollbar">
     <button class="nav-btn" onclick="openRegisterPopup()">
       <i data-lucide="clipboard-list" width="16"></i> ลงทะเบียน

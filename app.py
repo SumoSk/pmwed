@@ -39,6 +39,111 @@ def admin_required(fn):
 def booking_page():
     return render_template("booking.html")
 
+@app.route("/api/admin/seat/move", methods=["POST"])
+@admin_required
+def api_admin_move_seat():
+    """
+    ย้ายข้อมูลจาก from_seat_id -> to_seat_id
+    payload: {from_seat_id, to_seat_id, move_reserved: bool}
+    - ย้าย guest_id, status, arrived (ถ้ามี)
+    - move_reserved = True จะย้าย reserved_for ไปด้วย (ถ้ามี)
+    """
+    try:
+        data = request.json or {}
+        from_id = (data.get("from_seat_id") or "").strip()
+        to_id = (data.get("to_seat_id") or "").strip()
+        move_reserved = bool(data.get("move_reserved") or False)
+
+        if not from_id or not to_id:
+            return jsonify({"success": False, "message": "missing seat id"}), 400
+        if from_id == to_id:
+            return jsonify({"success": False, "message": "from/to ต้องไม่ใช่ตัวเดียวกัน"}), 400
+
+        # 1) อ่านข้อมูลต้นทาง
+        from_resp = (
+            supabase.table("seats")
+            .select("id,status,arrived,reserved_for,guest_id")
+            .eq("id", from_id)
+            .single()
+            .execute()
+        )
+        s_from = from_resp.data or None
+        if not s_from:
+            return jsonify({"success": False, "message": "from seat not found"}), 404
+
+        # 2) อ่านข้อมูลปลายทาง
+        to_resp = (
+            supabase.table("seats")
+            .select("id,status,arrived,reserved_for,guest_id")
+            .eq("id", to_id)
+            .single()
+            .execute()
+        )
+        s_to = to_resp.data or None
+        if not s_to:
+            return jsonify({"success": False, "message": "to seat not found"}), 404
+
+        def norm(x): return str(x or "").strip().lower()
+        def is_booked_real(seat):
+            # “จองจริง” = status=booked และมี guest_id
+            return norm(seat.get("status")) == "booked" and bool(seat.get("guest_id"))
+
+        # ปลายทางห้ามมีการจองจริงอยู่แล้ว
+        if is_booked_real(s_to):
+            return jsonify({"success": False, "message": "ปลายทางถูกจองแล้ว"}), 400
+
+        # ต้นทางต้องมีอะไรให้ย้าย (อย่างน้อย guest_id หรือ reserved_for)
+        has_guest = bool(s_from.get("guest_id")) and norm(s_from.get("status")) == "booked"
+        has_reserved = bool((s_from.get("reserved_for") or "").strip())
+        if not has_guest and not has_reserved:
+            return jsonify({"success": False, "message": "ต้นทางไม่มีข้อมูลให้ย้าย"}), 400
+
+        # 3) เตรียม payload ย้ายไปปลายทาง
+        to_update = {}
+        from_update = {}
+
+        if has_guest:
+            # ย้ายคน + สถานะ
+            to_update["status"] = "booked"
+            to_update["guest_id"] = s_from.get("guest_id")
+            to_update["arrived"] = bool(s_from.get("arrived") or False)
+
+            # ปลายทางมีป้ายจองอยู่ เราจะ "ล้าง" ให้สะอาด เพราะมีคนมานั่งแล้ว
+            to_update["reserved_for"] = None
+
+            # เคลียร์ต้นทางให้ว่าง
+            from_update["status"] = "available"
+            from_update["guest_id"] = None
+            from_update["arrived"] = False
+
+            # เคลียร์ป้ายจองต้นทางด้วย (เพื่อไม่ค้าง)
+            from_update["reserved_for"] = None
+
+        elif has_reserved:
+            # ย้ายเฉพาะป้ายจอง (กรณีต้องการเลื่อนเก้าอี้ที่ “กันไว้”)
+            if norm(s_to.get("status")) == "booked" and s_to.get("guest_id"):
+                return jsonify({"success": False, "message": "ปลายทางถูกจองแล้ว"}), 400
+
+            to_update["reserved_for"] = s_from.get("reserved_for")
+            if norm(s_to.get("status")) != "booked":
+                to_update["status"] = "available"
+
+            from_update["reserved_for"] = None
+            if norm(s_from.get("status")) != "booked":
+                from_update["status"] = "available"
+
+        # move_reserved แบบ “ย้ายป้ายจองตามคน” (ถ้าต้นทางมีป้าย)
+        if has_guest and move_reserved and has_reserved:
+            to_update["reserved_for"] = s_from.get("reserved_for") or None
+
+        # 4) ทำ update (2 คำสั่ง)
+        supabase.table("seats").update(to_update).eq("id", to_id).execute()
+        supabase.table("seats").update(from_update).eq("id", from_id).execute()
+
+        return jsonify({"success": True})
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
 
 # ---------------------------
 # API: admin login/logout
@@ -98,10 +203,8 @@ def api_tables():
                     "status": s.get("status") or "available",
                     "arrived": bool(s.get("arrived") or False),
 
-                    # กันที่นั่ง/จองไกด์
                     "reserved_for": s.get("reserved_for") or "",
 
-                    # ข้อมูลแขก (ถ้ามี)
                     "guest_id": s.get("guest_id") or g.get("id"),
                     "guest_name": g.get("name") or "",
                     "guest_intro": g.get("intro") or "",
@@ -132,7 +235,7 @@ def api_book():
         name = (data.get("name") or "").strip()
         intro = (data.get("intro") or "").strip()
 
-        if not seat_id or not name :
+        if not seat_id or not name:
             return jsonify({"success": False, "message": "ข้อมูลไม่ครบ"}), 400
 
         rpc = supabase.rpc("book_seat", {
@@ -206,7 +309,6 @@ def api_wish():
 @app.route("/api/wishes", methods=["GET"])
 def api_wishes():
     try:
-        # พยายาม order ด้วย created_at ก่อน (ถ้าตารางมี)
         try:
             resp = (
                 supabase
@@ -218,7 +320,6 @@ def api_wishes():
             )
             return jsonify({"success": True, "wishes": resp.data or []})
         except Exception:
-            # fallback ถ้าไม่มี created_at
             resp = (
                 supabase
                 .table("wishes")
@@ -269,7 +370,6 @@ def api_admin_update_guest():
         intro = (data.get("intro") or "").strip()
         gift_amount = data.get("gift_amount")
 
-        # แปลง gift_amount เป็นเลขหรือ None
         try:
             gift_amount = float(gift_amount) if gift_amount not in (None, "",) else None
         except Exception:
@@ -282,6 +382,68 @@ def api_admin_update_guest():
         }).eq("id", guest_id).execute()
 
         return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+# ---------------------------
+# ✅ ADMIN: clear seat (เคลียร์เก้าอี้ตัวเดียวให้ว่างจริง)
+# expects: {seat_id}
+# ---------------------------
+@app.route("/api/admin/seat/clear", methods=["POST"])
+@admin_required
+def api_admin_clear_seat():
+    """
+    เคลียร์เฉพาะเก้าอี้ตัวเดียว:
+    - seats: status='available', arrived=false, reserved_for=null, guest_id=null
+    - guests: ลบ guest record เฉพาะกรณีที่ไม่มี seat อื่นอ้างอิง (กันลบผิด)
+    """
+    try:
+        data = request.json or {}
+        seat_id = (data.get("seat_id") or "").strip()
+        if not seat_id:
+            return jsonify({"success": False, "message": "missing seat_id"}), 400
+
+        # 1) อ่านข้อมูล seat เพื่อหา guest_id เดิม
+        seat_resp = (
+            supabase
+            .table("seats")
+            .select("id, guest_id")
+            .eq("id", seat_id)
+            .single()
+            .execute()
+        )
+        seat_row = seat_resp.data or None
+        if not seat_row:
+            return jsonify({"success": False, "message": "seat not found"}), 404
+
+        old_guest_id = seat_row.get("guest_id")
+
+        # 2) เคลียร์ seat ให้กลับเป็นว่าง (เฉพาะตัวนี้)
+        supabase.table("seats").update({
+            "status": "available",
+            "arrived": False,
+            "guest_id": None,
+            "reserved_for": None
+        }).eq("id", seat_id).execute()
+
+        # 3) ถ้ามี guest_id เดิม -> ลบได้เฉพาะกรณีที่ไม่มี seat อื่นอ้างอิง
+        if old_guest_id:
+            cnt = (
+                supabase
+                .table("seats")
+                .select("id", count="exact")
+                .eq("guest_id", old_guest_id)
+                .execute()
+            )
+            ref_count = cnt.count or 0
+
+            # หลังเคลียร์ seat นี้แล้ว ถ้ายังมีคนอื่นอ้างอิง -> ไม่ลบ
+            if ref_count == 0:
+                supabase.table("guests").delete().eq("id", old_guest_id).execute()
+
+        return jsonify({"success": True})
+
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
@@ -304,14 +466,16 @@ def api_admin_seat_reserve():
         seat = (
             supabase
             .table("seats")
-            .select("id,status")
+            .select("id,status,guest_id")
             .eq("id", seat_id)
             .single()
             .execute()
         )
         seat_data = seat.data or {}
 
-        if seat_data.get("status") == "booked":
+        # ✅ กันเฉพาะ "จองจริง": status=booked และมี guest_id
+        # (ถ้า status=booked แต่ guest_id ว่าง -> ถือว่าเคยค้าง/ลบแล้ว ให้ตั้งป้ายได้)
+        if seat_data.get("status") == "booked" and seat_data.get("guest_id"):
             return jsonify({"success": False, "message": "ที่นั่งนี้ถูกจองแล้ว ไม่สามารถตั้งจองไกด์ได้"}), 400
 
         supabase.table("seats").update({
@@ -417,7 +581,9 @@ def export_csv():
 
 
 # ---------------------------
-# Run (เหลือครั้งเดียวท้ายไฟล์)
+# Run
 # ---------------------------
 if __name__ == "__main__":
     app.run(debug=True)
+
+
