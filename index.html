@@ -1,0 +1,681 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#db2777">
+<meta name="description" content="ผังโต๊ะและรายชื่อแขก งานแต่ง Palmy & Sumo">
+<title>Palmy & Sumo · Wedding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+    :root{
+      --gold1:#f7e7b4;
+      --gold2:#d6b35c;
+      --ink:#0f172a;
+    }
+
+    body{
+      font-family:'Prompt','Segoe UI',sans-serif;
+      margin:0;
+      background:
+        radial-gradient(1200px 500px at 50% -120px, rgba(251,113,133,.25), transparent 60%),
+        radial-gradient(900px 420px at 15% 10%, rgba(214,179,92,.20), transparent 55%),
+        linear-gradient(180deg, #fbfbfd 0%, #f8fafc 45%, #fbfbfd 100%);
+      padding:10px;
+      padding-bottom:170px;
+      font-size:14px;
+      color:var(--ink);
+    }
+
+    .nav-btn{
+      background:rgba(255,255,255,.55);
+      color:#0f172a;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:400;
+      border:1px solid rgba(226,232,240,.95);
+      box-shadow:0 10px 30px rgba(15,23,42,.08);
+      display:flex;
+      align-items:center;
+      gap:6px;
+      white-space:nowrap;
+      -webkit-tap-highlight-color:transparent;
+      transition:.12s;
+      backdrop-filter: blur(10px);
+    }
+    .nav-btn:hover{ transform:translateY(-1px); box-shadow:0 16px 44px rgba(15,23,42,.10); }
+    .no-scrollbar::-webkit-scrollbar{ display:none; }
+    .no-scrollbar{ -ms-overflow-style:none; scrollbar-width:none; }
+
+    @media (max-width:640px){
+      .nav-btn{ padding:5px 8px; font-size:11px; }
+      .nav-btn i{ width:14px !important; height:14px !important; }
+      .swal2-popup{width:95vw !important;margin:0 !important;}
+    }
+
+    #venue-map{
+      width:min(784px,95vw);
+      margin:0 auto;
+      border-radius:20px;
+      overflow:hidden;
+      background:rgba(255,255,255,.85);
+      border:1px solid rgba(226,232,240,.9);
+      box-shadow:0 22px 70px rgba(15,23,42,.12);
+      position:relative;
+    }
+    #venue-map:before{
+      content:"";
+      position:absolute; inset:0;
+      border-radius:20px;
+      pointer-events:none;
+      border:1px solid rgba(214,179,92,.35);
+      box-shadow: inset 0 0 0 1px rgba(247,231,180,.25);
+    }
+
+    .map-wrapper{position:relative;width:100%;}
+    .map-img{width:100%;height:auto;display:block;user-select:none;-webkit-user-drag:none;}
+    #table-overlay{position:absolute;inset:0;z-index:20;}
+
+    .table-hotspot{
+      position:absolute;
+      transform:translate(-50%,-50%);
+      cursor:pointer;
+      width:30px;height:30px;border-radius:999px;
+      background:rgba(255,255,255,.58);
+      border:1.5px solid rgba(16,185,129,.90);
+      box-shadow:0 6px 16px rgba(15,23,42,.14);
+      backdrop-filter: blur(6px);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      color:#065f46;
+      font-weight:400;
+      padding:0;
+      -webkit-tap-highlight-color:transparent;
+      transition:.12s;
+    }
+    .table-hotspot:hover{ transform:translate(-50%,-50%) scale(1.05); }
+    .table-num{ font-size:14px; line-height:1; font-weight:950; }
+    .table-tap-hint{ font-size:7px; letter-spacing:.12em; opacity:.6; line-height:1; pointer-events:none; }
+
+    .table-label{
+      position:absolute;
+      top:-10px;
+      left:50%;
+      transform:translateX(-50%);
+      padding:2px 6px;
+      font-size:6.5px;
+      font-weight:400;
+      border-radius:999px;
+      background:rgba(255,255,255,.88);
+      border:1px solid rgba(226,232,240,.90);
+      color:#0f172a;
+      box-shadow:0 2px 8px rgba(15,23,42,.10);
+      pointer-events:none;
+      white-space:nowrap;
+      max-width:92px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .table-full{ border-color:rgba(225,29,72,.92); color:rgba(127,29,29,.95); }
+    .table-selected{
+      border-color:rgba(219,39,119,.95);
+      box-shadow:0 0 0 6px rgba(236,72,153,.14), 0 8px 18px rgba(15,23,42,.16);
+    }
+
+    @media (max-width:640px){
+      .table-hotspot{ width:25px; height:25px; }
+      .table-num{ font-size:6px; }
+      .table-label{ font-size:6.5px; padding:2px 5px; top:-9px; max-width:84px; }
+      .table-tap-hint{ font-size:4px; }
+    }
+
+    .swal2-popup{
+      border-radius: 22px !important;
+      box-shadow:0 30px 90px rgba(15,23,42,.18) !important;
+    }
+    .swal2-html-container{ margin:0 !important; }
+
+    .wish-wall{
+      width:min(784px,95vw);
+      margin:10px auto 0;
+      border-radius:20px;
+      overflow:hidden;
+      background:rgba(255,255,255,.78);
+      border:1px solid rgba(226,232,240,.9);
+      box-shadow:0 22px 70px rgba(15,23,42,.10);
+      backdrop-filter: blur(10px);
+      position:relative;
+    }
+    .wish-wall:before{
+      content:"";
+      position:absolute; inset:0;
+      border-radius:20px;
+      pointer-events:none;
+      border:1px solid rgba(214,179,92,.28);
+      box-shadow: inset 0 0 0 1px rgba(247,231,180,.20);
+    }
+
+    .wish-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      border-bottom:1px solid rgba(226,232,240,.85);
+      background:linear-gradient(180deg, rgba(255,255,255,.85) 0%, rgba(255,247,251,.75) 100%);
+    }
+    .wish-title{
+      display:flex;
+      align-items:baseline;
+      gap:8px;
+      min-width:0;
+    }
+    .wish-title .brand{
+      font-family:'Playfair Display', serif;
+      font-size:12px;
+      font-weight:400;
+      letter-spacing:.03em;
+      color:#0f172a;
+      white-space:nowrap;
+    }
+    .wish-title .sub{
+      font-size:9px;
+      font-weight:400;
+      color:#94a3b8;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .wish-refresh{
+      font-size:10px;
+      font-weight:400;
+      padding:5px 10px;
+      border-radius:999px;
+      border:1px solid rgba(226,232,240,.9);
+      background:rgba(255,255,255,.7);
+      box-shadow:0 6px 16px rgba(15,23,42,.08);
+      transition:.12s;
+      backdrop-filter: blur(10px);
+    }
+    .wish-refresh:hover{ transform:translateY(-1px); }
+
+    .wish-body{
+      padding:10px 12px 12px;
+      background:linear-gradient(180deg, rgba(255,255,255,.70) 0%, rgba(251,251,253,.85) 100%);
+    }
+
+    .wish-list{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap:8px;
+      max-height:132px;
+      overflow:auto;
+      padding-right:2px;
+    }
+    @media (min-width:640px){
+      .wish-list{ grid-template-columns: repeat(3, minmax(0,1fr)); max-height:160px; }
+    }
+
+    .wish-card{
+      border:1px solid rgba(226,232,240,.9);
+      background: rgba(255,255,255,.86);
+      border-radius:14px;
+      padding:8px 9px;
+      box-shadow:0 12px 30px rgba(15,23,42,.08);
+      position:relative;
+    }
+    .wish-card:before{
+      content:"";
+      position:absolute; inset:0;
+      border-radius:14px;
+      pointer-events:none;
+      border:1px solid rgba(214,179,92,.18);
+    }
+
+    .wish-msg{
+      font-size:8px;
+      font-weight:400;
+      color:#334155;
+      line-height:1.3;
+      display:-webkit-box;
+      -webkit-line-clamp:3;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
+    }
+
+    .wish-meta{
+      margin-top:5px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:6px;
+      font-size:8px;
+      color:#64748b;
+      font-weight:400;
+    }
+    .wish-name{
+      max-width:70%;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .wish-time{ opacity:.85; white-space:nowrap; }
+
+    .wish-empty{
+      grid-column:1/-1;
+      font-size:8px;
+      color:#94a3b8;
+      font-weight:400;
+      padding:10px;
+      text-align:center;
+      border:1px dashed rgba(226,232,240,.9);
+      border-radius:14px;
+      background:rgba(255,255,255,.6);
+    }
+
+    .bottom-actions{
+      position:fixed;
+      left:50%;
+      bottom:10px;
+      transform:translateX(-50%);
+      z-index:9999;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      padding:10px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.34);
+      border:1px solid rgba(226,232,240,.85);
+      backdrop-filter: blur(12px);
+      box-shadow:0 20px 70px rgba(15,23,42,.18);
+      max-width:calc(100vw - 24px);
+      overflow-x:auto;
+    }
+    .bottom-actions:before{
+      content:"";
+      position:absolute; inset:0;
+      border-radius:999px;
+      pointer-events:none;
+      border:1px solid rgba(214,179,92,.22);
+      box-shadow: inset 0 0 0 1px rgba(247,231,180,.16);
+    }
+    @media (max-width:640px){
+      .bottom-actions{
+        bottom:10px;
+        gap:8px;
+        padding:8px 10px;
+      }
+    }
+
+    /* =========================
+       MOBILE TABLE POPUP (8px)
+       ========================= */
+    .swal2-popup.tblpop{ border-radius:22px !important; overflow:hidden; }
+    .tblpop, .tblpop *{ font-size:8px !important; line-height:1.25 !important; }
+    .tblpop .tp-wrap{ padding:10px; }
+    .tblpop .tp-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px; }
+    .tblpop .tp-title{ min-width:0; display:flex; flex-direction:column; gap:4px; }
+    .tblpop .tp-title .name{ font-size:11px !important; font-weight:900; line-height:1.25; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .tblpop .tp-badges{ display:flex; flex-wrap:wrap; gap:6px; }
+    .tblpop .tp-badge{
+      display:inline-flex; align-items:center; gap:4px;
+      padding:4px 8px; border-radius:999px;
+      border:1px solid rgba(226,232,240,.95);
+      background:rgba(255,255,255,.85);
+    }
+    .tblpop .tp-close{
+      width:34px; height:34px; border-radius:12px;
+      border:1px solid rgba(226,232,240,.95);
+      background:#fff;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .tblpop .tp-list{
+      border:1px solid rgba(226,232,240,.95);
+      border-radius:16px;
+      overflow:auto;
+      max-height:58vh;
+      background:rgba(255,255,255,.75);
+    }
+    .tblpop .tp-row{
+      display:flex; gap:8px; align-items:center; justify-content:space-between;
+      padding:10px;
+      border-bottom:1px solid rgba(226,232,240,.8);
+    }
+    .tblpop .tp-row:last-child{ border-bottom:none; }
+    .tblpop .tp-left{ min-width:0; }
+    .tblpop .tp-seat{ font-size:5.5px !important; font-weight:500; letter-spacing:.1em; opacity:.45; }
+    .tblpop .tp-guest{ margin-top:4px; font-weight:900; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .tblpop .tp-tags{ margin-top:4px; display:flex; flex-wrap:wrap; gap:6px; }
+    .tblpop .tp-tag{
+      display:inline-flex; align-items:center; gap:4px;
+      padding:3px 8px; border-radius:999px;
+      border:1px solid rgba(226,232,240,.95);
+      background:rgba(255,255,255,.9);
+      opacity:.9;
+    }
+    .tblpop .tp-tag.red{ background:rgba(254,242,242,.95); border-color:rgba(254,202,202,.95); color:#991b1b; }
+    .tblpop .tp-right{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
+    .tblpop .tp-pill{
+      padding:4px 8px; border-radius:999px;
+      border:1px solid rgba(226,232,240,.95);
+      font-weight:900;
+      background:#fff;
+    }
+    .tblpop .tp-pill.ok{ background:#ecfdf5; color:#065f46; border-color:rgba(16,185,129,.25); }
+    .tblpop .tp-pill.bad{ background:#fff1f2; color:#9f1239; border-color:rgba(251,113,133,.35); }
+    .tblpop .tp-pill.arr{ background:#eef2ff; color:#3730a3; border-color:rgba(99,102,241,.25); }
+
+    .tblpop .tp-btn{
+      padding:6px 10px;
+      border-radius:12px;
+      border:1px solid rgba(226,232,240,.95);
+      font-weight:900;
+      background:#fff;
+    }
+    .tblpop .tp-btn.reg{
+      color:#fff;
+      background:linear-gradient(135deg,#16a34a 0%,#34d399 100%);
+      border-color:rgba(16,185,129,.25);
+    }
+    .tblpop .tp-btn.arrive{
+      color:#fff;
+      background:linear-gradient(135deg,#db2777 0%, #fb7185 100%);
+      border-color:rgba(219,39,119,.25);
+    }
+    .tblpop .tp-btn.edit{ background:#fff; }
+    .tblpop .tp-btn.danger{
+      background:#fff1f2;
+      color:#9f1239;
+      border-color:rgba(254,202,202,.95);
+    }
+    .tblpop .tp-btn.disabled{
+      background:#f1f5f9; color:#94a3b8;
+      cursor:not-allowed;
+    }
+
+    .tblpop .tp-nav{ margin-top:10px; display:flex; gap:8px; }
+    .tblpop .tp-nav button{
+      flex:1;
+      padding:10px 10px;
+      border-radius:16px;
+      border:1px solid rgba(226,232,240,.95);
+      background:rgba(255,255,255,.9);
+      font-weight:900;
+    }
+
+    /* WISH POPUP */
+    .swal2-popup.wishpop{ border-radius:22px !important; overflow:hidden; }
+    .wishpop, .wishpop *{ font-size:8px !important; line-height:1.25 !important; }
+    .wishpop .wp-wrap{ padding:12px; }
+    .wishpop .wp-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px; }
+    .wishpop .wp-title{ font-weight:900; }
+    .wishpop .wp-sub{ margin-top:2px; opacity:.6; }
+    .wishpop .wp-close{
+      width:32px; height:32px;
+      border-radius:12px;
+      border:1px solid rgba(226,232,240,.95);
+      background:#fff;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .wishpop .wp-box{
+      border:1px solid rgba(226,232,240,.95);
+      border-radius:16px;
+      padding:10px;
+      background:rgba(255,255,255,.9);
+      display:grid;
+      gap:8px;
+    }
+    .wishpop label{ font-weight:700; opacity:.8; }
+    .wishpop input, .wishpop textarea{
+      width:100%;
+      border-radius:12px;
+      border:1px solid rgba(226,232,240,.95);
+      padding:8px 10px;
+      outline:none;
+      resize:none;
+    }
+    .wishpop textarea{ min-height:80px; }
+    .wishpop .wp-count{ text-align:right; opacity:.6; }
+    .wishpop .wp-actions{ margin-top:10px; display:flex; gap:8px; }
+    .wishpop .wp-btn{
+      flex:1;
+      padding:10px;
+      border-radius:14px;
+      border:1px solid rgba(226,232,240,.95);
+      font-weight:900;
+      background:#fff;
+    }
+    .wishpop .wp-btn.send{
+      color:#fff;
+      background:linear-gradient(135deg,#db2777 0%, #fb7185 100%);
+      border-color:rgba(219,39,119,.25);
+    }
+
+    /* REGISTER POPUP */
+    .swal2-popup.regpop{ border-radius:22px !important; overflow:hidden; }
+    .regpop, .regpop *{ font-size:8px !important; line-height:1.25 !important; }
+    .regpop .rp-wrap{ padding:12px; }
+    .regpop .rp-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px; }
+    .regpop .rp-title{ font-weight:900; }
+    .regpop .rp-sub{ margin-top:2px; opacity:.6; }
+    .regpop .rp-close{
+      width:32px; height:32px;
+      border-radius:12px;
+      border:1px solid rgba(226,232,240,.95);
+      background:#fff;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .regpop .rp-box{
+      border:1px solid rgba(226,232,240,.95);
+      border-radius:16px;
+      padding:10px;
+      background:rgba(255,255,255,.9);
+      display:grid;
+      gap:8px;
+    }
+    .regpop label{ font-weight:700; opacity:.8; }
+    .regpop input, .regpop textarea, .regpop select{
+      width:100%;
+      border-radius:12px;
+      border:1px solid rgba(226,232,240,.95);
+      padding:8px 10px;
+      outline:none;
+    }
+    .regpop textarea{ resize:none; }
+    .regpop .rp-summary{
+      display:inline-flex;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(226,232,240,.95);
+      background:rgba(255,255,255,.85);
+      font-weight:900;
+    }
+    .regpop .rp-hint{ opacity:.6; }
+    .regpop .rp-actions{ margin-top:10px; display:flex; gap:8px; }
+    .regpop .rp-btn{
+      flex:1;
+      padding:10px;
+      border-radius:14px;
+      border:1px solid rgba(226,232,240,.95);
+      font-weight:900;
+      background:#fff;
+    }
+    .regpop .rp-btn.send{
+      color:#fff;
+      background:linear-gradient(135deg,#16a34a 0%, #34d399 100%);
+      border-color:rgba(16,185,129,.25);
+    }
+  
+
+html{scroll-behavior:smooth}
+body{max-width:100%;padding:20px 12px 90px}
+.page-shell{width:min(900px,100%);margin:0 auto}
+.wedding-header{text-align:center;margin:10px auto 20px}
+.wedding-eyebrow{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#a87a33;font-weight:700}
+.wedding-header h1{font-family:'Playfair Display','Prompt',serif;font-weight:700;font-size:clamp(27px,5vw,48px);margin:4px 0;color:#8b385e}
+.wedding-header p{font-size:13px;margin:3px 0;color:#64748b}
+.section-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:18px 4px 10px;font-weight:700;font-size:14px}
+.section-heading span{color:#64748b;font-size:11px;font-weight:400}
+#venue-map{width:100%;margin:0;box-shadow:0 18px 48px rgba(15,23,42,.09)}
+#venue-map:before{z-index:25}
+.table-hotspot:focus-visible{outline:3px solid #d6b35c;outline-offset:3px}
+.table-hotspot{width:clamp(21px,3.6vw,30px);height:clamp(21px,3.6vw,30px);z-index:10}
+.table-num{font-size:clamp(9px,1.8vw,14px)}
+.table-tap-hint{font-size:6px}
+.table-label{font-size:9px;max-width:120px;top:-16px}
+.table-hotspot.known{border-color:#b77b35;background:rgba(255,248,232,.95);color:#75501d}
+.table-hotspot.has-guests{border-color:#16a34a;background:rgba(240,253,244,.94);color:#166534}
+.empty-alert{display:none;margin:14px 0;padding:12px 14px;border-radius:14px;font-size:12px;color:#7c5e35;background:#fffaf0;border:1px solid #e8d8bc}
+.empty-alert.visible{display:block}
+.wish-wall{width:100%;max-width:none;margin:16px 0}
+.wish-body{min-height:80px}
+.wish-list{min-height:52px}
+.wish-card{overflow-wrap:anywhere}
+.wish-empty{padding:18px;text-align:center;color:#64748b;font-size:12px}
+.footer-note{text-align:center;font-size:11px;color:#94a3b8;margin:20px auto}
+.sheet-backdrop[hidden]{display:none!important}
+.sheet-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.56);z-index:1000;display:flex;align-items:flex-end;justify-content:center;padding:12px}
+.sheet{width:min(540px,100%);max-height:min(84vh,760px);overflow:auto;background:#fff;border:1px solid #f4e5ee;border-radius:22px;padding:20px;box-shadow:0 20px 65px rgba(0,0,0,.22)}
+.sheet-title{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.sheet-title h2{font-size:19px;color:#8b385e;margin:0}
+.sheet-close{border:1px solid #e2e8f0;background:#fff;border-radius:10px;padding:8px 12px;cursor:pointer}
+.sheet-sub{font-size:12px;color:#64748b;margin:4px 0 14px}
+.guest-list{display:grid;gap:8px;margin:10px 0}
+.guest-entry{padding:12px;border:1px solid #eee5ed;background:#fffbfd;border-radius:14px;display:flex;gap:12px}
+.guest-number{display:grid;place-items:center;flex:0 0 28px;height:28px;border-radius:50%;background:#fae8f1;color:#9c356b;font-size:12px}
+.guest-name{font-weight:700;color:#334155;font-size:13px}
+.guest-intro{font-size:11px;color:#64748b;margin-top:2px;overflow-wrap:anywhere}
+.guest-empty{padding:16px;border:1px dashed #d8c8d2;border-radius:14px;background:#fffafb;font-size:12px;color:#64748b;text-align:center}
+@media(max-width:600px){body{padding:10px 7px 60px}.wedding-header{margin:10px 0 12px}.section-heading{margin:12px 5px 8px}.table-label{font-size:7px;max-width:70px;top:-13px}.table-hotspot{width:21px;height:21px}.table-num{font-size:10px}.sheet-backdrop{padding:0}.sheet{border-radius:22px 22px 0 0;max-height:88vh}}
+</style>
+</head>
+<body>
+<main class="page-shell">
+<header class="wedding-header"><div class="wedding-eyebrow">Our Wedding</div><h1>Palmy &amp; Sumo</h1><p>ผังโต๊ะและรายชื่อแขกในวันพิเศษของเรา</p></header>
+<div class="section-heading">แผนผังโต๊ะ <span>แตะหมายเลขโต๊ะเพื่อดูรายชื่อ</span></div>
+<div id="venue-map"><div class="map-wrapper">
+<img class="map-img" src="./static/images/layout.png" alt="แผนผังโต๊ะงานแต่ง" loading="eager">
+<div id="table-overlay"></div></div></div>
+<div id="dataNotice" class="empty-alert" role="status">ขณะนี้หน้าเว็บแสดงผังโต๊ะ ส่วนรายชื่อแขกและคำอวยพรกำลังปรับปรุงข้อมูลค่ะ</div>
+<section class="wish-wall" aria-label="คำอวยพร">
+<div class="wish-head"><div class="wish-title"><div class="brand">Palmy &amp; Sumo</div><div class="sub">WISHES</div></div></div>
+<div class="wish-body"><div id="wishList" class="wish-list"><div class="wish-empty">กำลังโหลด…</div></div></div>
+</section>
+<footer class="footer-note">With love · Palmy &amp; Sumo</footer>
+</main>
+<div id="sheetBackdrop" class="sheet-backdrop" hidden>
+ <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+   <div class="sheet-title"><h2 id="sheetTitle">โต๊ะ</h2><button id="sheetClose" type="button" class="sheet-close" aria-label="ปิด">ปิด ✕</button></div>
+   <p id="sheetSub" class="sheet-sub"></p><div id="sheetContent"></div>
+ </section>
+</div>
+<script>
+'use strict';
+const TABLE_POSITIONS = [
+      { table: 1,  xPct: 0.118622, yPct: 0.433122 },
+      { table: 2,  xPct: 0.308418, yPct: 0.433122 },
+      { table: 3,  xPct: 0.694133, yPct: 0.432535 },
+      { table: 4,  xPct: 0.883929, yPct: 0.433122 },
+      { table: 5,  xPct: 0.118622, yPct: 0.494089 },
+      { table: 6,  xPct: 0.309949, yPct: 0.493503 },
+      { table: 7,  xPct: 0.695663, yPct: 0.494089 },
+      { table: 8,  xPct: 0.885459, yPct: 0.493503 },
+      { table: 9,  xPct: 0.120153, yPct: 0.556815 },
+      { table:10,  xPct: 0.309949, yPct: 0.556815 },
+      { table:11,  xPct: 0.694133, yPct: 0.557401 },
+      { table:12,  xPct: 0.883929, yPct: 0.557401 },
+      { table:13,  xPct: 0.120153, yPct: 0.620127 },
+      { table:14,  xPct: 0.308418, yPct: 0.620713 },
+      { table:15,  xPct: 0.694133, yPct: 0.620713 },
+      { table:16,  xPct: 0.885459, yPct: 0.620127 },
+      { table:17,  xPct: 0.118622, yPct: 0.681681 },
+      { table:18,  xPct: 0.309949, yPct: 0.682267 },
+      { table:19,  xPct: 0.695663, yPct: 0.682853 },
+      { table:20,  xPct: 0.882398, yPct: 0.682267 },
+      { table:21,  xPct: 0.120153, yPct: 0.743820 },
+      { table:22,  xPct: 0.308418, yPct: 0.744406 },
+      { table:23,  xPct: 0.694133, yPct: 0.744993 },
+      { table:24,  xPct: 0.883929, yPct: 0.744406 },
+      { table:25,  xPct: 0.120153, yPct: 0.806546 },
+      { table:26,  xPct: 0.308418, yPct: 0.806546 },
+      { table:27,  xPct: 0.697194, yPct: 0.806546 },
+      { table:28,  xPct: 0.885459, yPct: 0.805960 },
+      { table:29,  xPct: 0.120153, yPct: 0.869858 },
+      { table:30,  xPct: 0.308418, yPct: 0.869858 },
+      { table:31,  xPct: 0.694133, yPct: 0.869858 },
+      { table:32,  xPct: 0.885459, yPct: 0.870445 },
+    ];
+let weddingData={tables:[],wishes:[]};
+const tableMap=new Map();
+const overlay=document.getElementById('table-overlay');
+const backdrop=document.getElementById('sheetBackdrop');
+const dialogTitle=document.getElementById('sheetTitle');
+const dialogSub=document.getElementById('sheetSub');
+const dialogContent=document.getElementById('sheetContent');
+const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function getGuest(seat){if(!seat||typeof seat!=='object')return null;const nested=seat.guest&&typeof seat.guest==='object'?seat.guest:{};return {name:String(seat.guest_name??seat.name??nested.name??'').trim(),intro:String(seat.guest_intro??seat.intro??nested.intro??'').trim(),seat:seat.seat_number??seat.number??seat.seat??null};}
+function tableData(n){return tableMap.get(n)||null}
+function guestsFor(table){return Array.isArray(table?.seats)?table.seats.map(getGuest).filter(g=>g&&g.name):Array.isArray(table?.guests)?table.guests.map(getGuest).filter(g=>g&&g.name):[]}
+function openSheet(title,sub,content){dialogTitle.textContent=title;dialogSub.textContent=sub;dialogContent.innerHTML=content;backdrop.hidden=false;document.body.style.overflow='hidden';document.getElementById('sheetClose').focus()}
+function closeSheet(){backdrop.hidden=true;document.body.style.overflow=''}
+function renderTables(){
+ overlay.replaceChildren();
+ TABLE_POSITIONS.forEach(p=>{
+   const t=tableData(p.table), guests=guestsFor(t);
+   const btn=document.createElement('button');btn.type='button';
+   btn.className='table-hotspot'+(t?' known':'')+(guests.length?' has-guests':'');
+   btn.style.left=(p.xPct*100)+'%';btn.style.top=(p.yPct*100)+'%';
+   btn.setAttribute('aria-label','โต๊ะ '+p.table+', ดูรายชื่อแขก');
+   const num=document.createElement('span');num.className='table-num';num.textContent=p.table;btn.appendChild(num);
+   const label=document.createElement('span');label.className='table-label';label.textContent=t?.table_name||t?.name||('โต๊ะ '+p.table);btn.appendChild(label);
+   btn.addEventListener('click',()=>openTable(p.table));
+   overlay.appendChild(btn);
+ });
+}
+function openTable(n){
+ const t=tableData(n), guests=guestsFor(t),name=t?.table_name||t?.name||('โต๊ะ '+n);
+ let html;
+ if(!t)html='<div class="guest-empty">ยังไม่มีข้อมูลรายชื่อแขกของโต๊ะนี้ในไฟล์เว็บไซต์</div>';
+ else if(!guests.length)html='<div class="guest-empty">โต๊ะนี้ยังไม่มีรายชื่อแขกในข้อมูลที่นำเข้า</div>';
+ else html='<div class="guest-list">'+guests.map((g,i)=>'<div class="guest-entry"><span class="guest-number">'+escapeHtml(g.seat??(i+1))+'</span><div><div class="guest-name">'+escapeHtml(g.name)+'</div>'+(g.intro?'<div class="guest-intro">'+escapeHtml(g.intro)+'</div>':'')+'</div></div>').join('')+'</div>';
+ openSheet(name,guests.length?('รายชื่อ '+guests.length+' คน'):'ข้อมูลรายชื่อ',html);
+}
+function renderWishes(){
+ const el=document.getElementById('wishList');
+ const wishes=Array.isArray(weddingData.wishes)?weddingData.wishes:[];
+ if(!wishes.length){el.innerHTML='<div class="wish-empty">ยังไม่มีข้อมูลคำอวยพรที่นำเข้ามา</div>';return;}
+ el.innerHTML=wishes.slice(0,100).map(w=>{
+  const name=escapeHtml(w.name||w.wish_name||'ไม่ระบุชื่อ');
+  const message=escapeHtml(w.message||w.wish_msg||'');
+  return '<div class="wish-card"><div class="wish-msg">'+message+'</div><div class="wish-meta"><div class="wish-name">'+name+'</div></div></div>';
+ }).join('');
+}
+async function loadData(){
+ try{
+   const res=await fetch('./wedding-data.json',{cache:'no-store'});
+   if(!res.ok)throw new Error('data file missing');
+   const json=await res.json();
+   weddingData=json&&typeof json==='object'?json:{tables:[],wishes:[]};
+ }catch(e){weddingData={tables:[],wishes:[]};}
+ tableMap.clear();
+ if(Array.isArray(weddingData.tables))weddingData.tables.forEach(t=>{
+   const number=Number(t.table_number??t.number??t.table);
+   if(Number.isInteger(number)&&number>=1&&number<=32)tableMap.set(number,t);
+ });
+ const missingData=tableMap.size===0&&(!Array.isArray(weddingData.wishes)||!weddingData.wishes.length);
+ document.getElementById('dataNotice').classList.toggle('visible',missingData);
+ renderTables();renderWishes();
+}
+document.getElementById('sheetClose').addEventListener('click',closeSheet);
+backdrop.addEventListener('click',e=>{if(e.target===backdrop)closeSheet()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!backdrop.hidden)closeSheet()});
+loadData();
+</script>
+</body>
+</html>
