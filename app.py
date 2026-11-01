@@ -39,13 +39,17 @@ def admin_required(fn):
 def booking_page():
     return render_template("booking.html")
 
+
+# ---------------------------
+# ADMIN: move seat
+# ---------------------------
 @app.route("/api/admin/seat/move", methods=["POST"])
 @admin_required
 def api_admin_move_seat():
     """
     ย้ายข้อมูลจาก from_seat_id -> to_seat_id
     payload: {from_seat_id, to_seat_id, move_reserved: bool}
-    - ย้าย guest_id, status, arrived (ถ้ามี)
+    - ย้าย guest_id, status, arrived
     - move_reserved = True จะย้าย reserved_for ไปด้วย (ถ้ามี)
     """
     try:
@@ -83,7 +87,9 @@ def api_admin_move_seat():
         if not s_to:
             return jsonify({"success": False, "message": "to seat not found"}), 404
 
-        def norm(x): return str(x or "").strip().lower()
+        def norm(x):
+            return str(x or "").strip().lower()
+
         def is_booked_real(seat):
             # “จองจริง” = status=booked และมี guest_id
             return norm(seat.get("status")) == "booked" and bool(seat.get("guest_id"))
@@ -108,19 +114,17 @@ def api_admin_move_seat():
             to_update["guest_id"] = s_from.get("guest_id")
             to_update["arrived"] = bool(s_from.get("arrived") or False)
 
-            # ปลายทางมีป้ายจองอยู่ เราจะ "ล้าง" ให้สะอาด เพราะมีคนมานั่งแล้ว
+            # ปลายทางมีป้ายจองอยู่ เราจะล้างให้สะอาดเพราะมีคนมานั่งแล้ว
             to_update["reserved_for"] = None
 
             # เคลียร์ต้นทางให้ว่าง
             from_update["status"] = "available"
             from_update["guest_id"] = None
             from_update["arrived"] = False
-
-            # เคลียร์ป้ายจองต้นทางด้วย (เพื่อไม่ค้าง)
             from_update["reserved_for"] = None
 
         elif has_reserved:
-            # ย้ายเฉพาะป้ายจอง (กรณีต้องการเลื่อนเก้าอี้ที่ “กันไว้”)
+            # ย้ายเฉพาะป้ายจอง
             if norm(s_to.get("status")) == "booked" and s_to.get("guest_id"):
                 return jsonify({"success": False, "message": "ปลายทางถูกจองแล้ว"}), 400
 
@@ -144,6 +148,7 @@ def api_admin_move_seat():
 
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
+
 
 # ---------------------------
 # API: admin login/logout
@@ -303,7 +308,7 @@ def api_wish():
 
 
 # ---------------------------
-# ✅ API: wishes list (หน้าเว็บใช้โหลดโชว์)
+# API: wishes list
 # GET /api/wishes  -> {success, wishes:[...]}
 # ---------------------------
 @app.route("/api/wishes", methods=["GET"])
@@ -387,16 +392,16 @@ def api_admin_update_guest():
 
 
 # ---------------------------
-# ✅ ADMIN: clear seat (เคลียร์เก้าอี้ตัวเดียวให้ว่างจริง)
+# ✅ ADMIN: clear seat (ล้างทั้งหมด)
 # expects: {seat_id}
 # ---------------------------
 @app.route("/api/admin/seat/clear", methods=["POST"])
 @admin_required
 def api_admin_clear_seat():
     """
-    เคลียร์เฉพาะเก้าอี้ตัวเดียว:
+    ล้างทั้งหมดของเก้าอี้ตัวเดียว:
     - seats: status='available', arrived=false, reserved_for=null, guest_id=null
-    - guests: ลบ guest record เฉพาะกรณีที่ไม่มี seat อื่นอ้างอิง (กันลบผิด)
+    - guests: ลบ guest record เฉพาะกรณีที่ไม่มี seat อื่นอ้างอิงแล้ว (กันลบผิด)
     """
     try:
         data = request.json or {}
@@ -419,7 +424,7 @@ def api_admin_clear_seat():
 
         old_guest_id = seat_row.get("guest_id")
 
-        # 2) เคลียร์ seat ให้กลับเป็นว่าง (เฉพาะตัวนี้)
+        # 2) ล้าง seat "ทั้งหมด"
         supabase.table("seats").update({
             "status": "available",
             "arrived": False,
@@ -427,19 +432,18 @@ def api_admin_clear_seat():
             "reserved_for": None
         }).eq("id", seat_id).execute()
 
-        # 3) ถ้ามี guest_id เดิม -> ลบได้เฉพาะกรณีที่ไม่มี seat อื่นอ้างอิง
+        # 3) ถ้ามี guest_id เดิม -> ลบได้เฉพาะกรณีที่ไม่มี seat อื่นอ้างอิงแล้วจริง ๆ
         if old_guest_id:
-            cnt = (
+            ref = (
                 supabase
                 .table("seats")
-                .select("id", count="exact")
+                .select("id")
                 .eq("guest_id", old_guest_id)
+                .limit(1)
                 .execute()
             )
-            ref_count = cnt.count or 0
-
-            # หลังเคลียร์ seat นี้แล้ว ถ้ายังมีคนอื่นอ้างอิง -> ไม่ลบ
-            if ref_count == 0:
+            still_used = bool(ref.data)  # เหลือ seat อื่นอ้างอิงอยู่ไหม
+            if not still_used:
                 supabase.table("guests").delete().eq("id", old_guest_id).execute()
 
         return jsonify({"success": True})
@@ -579,11 +583,164 @@ def export_csv():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# =========================
+# HELPERS: get table+seats via relationship (NO FK GUESS)
+# =========================
+def _get_table_with_seats(table_number: int):
+    """
+    ดึงโต๊ะพร้อมที่นั่งผ่าน relationship จาก Supabase
+    ไม่ต้องรู้ว่า seats ผูกด้วยคอลัมน์อะไร (table_id/table_number/etc)
+    """
+    resp = (
+        supabase.table("tables")
+        .select(
+            "table_number, table_name, "
+            "seats(id, seat_number, status, arrived, reserved_for, guest_id)"
+        )
+        .eq("table_number", table_number)
+        .single()
+        .execute()
+    )
+    return resp.data or None
+
+
+def _seat_map_by_seat_number(table_row: dict):
+    """
+    คืน dict: {seat_number: seat_row}
+    """
+    seats = table_row.get("seats") or []
+    m = {}
+    for s in seats:
+        sn = s.get("seat_number")
+        if sn is None:
+            continue
+        m[int(sn)] = s
+    return m
+
+
+def _normalize_status(x):
+    return str(x or "").strip().lower()
+
+
+# =========================
+# ADMIN: MOVE WHOLE TABLE (seat-to-seat)
+# Spec (ตามที่คุณสรุป):
+# 1) ชนที่นั่งชนที่นั่ง (seat 1 -> seat 1 ...)
+# 2) แทนที่ทั้งหมด ไม่แคร์ปลายทางมีจอง/ลงทะเบียนหรือไม่
+# 3) ย้ายป้ายจองไปด้วย และ "โต๊ะเดิมกลายเป็นโต๊ะเปล่า"
+# =========================
+@app.route("/api/admin/table/move", methods=["POST"])
+@admin_required
+def api_admin_move_table():
+    try:
+        data = request.json or {}
+        from_table = int(data.get("from_table"))
+        to_table = int(data.get("to_table"))
+
+        if from_table == to_table:
+            return jsonify({"success": False, "message": "from/to ต้องไม่ใช่โต๊ะเดียวกัน"}), 400
+
+        t_from = _get_table_with_seats(from_table)
+        t_to = _get_table_with_seats(to_table)
+        if not t_from or not t_to:
+            return jsonify({"success": False, "message": "หาโต๊ะไม่เจอ"}), 404
+
+        from_map = _seat_map_by_seat_number(t_from)
+        to_map = _seat_map_by_seat_number(t_to)
+
+        # ย้ายตาม seat_number ที่มีอยู่ทั้งสองฝั่ง
+        common_seats = sorted(set(from_map.keys()) & set(to_map.keys()))
+        if not common_seats:
+            return jsonify({"success": False, "message": "ไม่มี seat_number ที่ตรงกันให้ย้าย"}), 400
+
+        # ทำแบบแทนที่ทั้งหมด: copy state จาก from -> to แล้ว clear from
+        for sn in common_seats:
+            s_from = from_map[sn]
+            s_to = to_map[sn]
+
+            # copy ทุกอย่างสำคัญไปปลายทาง (ทับหมด ไม่สนปลายทางเดิม)
+            to_update = {
+                "status": _normalize_status(s_from.get("status")) or "available",
+                "arrived": bool(s_from.get("arrived") or False),
+                "reserved_for": (s_from.get("reserved_for") or None),
+                "guest_id": (s_from.get("guest_id") or None),
+            }
+
+            # clear ต้นทางให้เป็นโต๊ะเปล่า
+            from_update = {
+                "status": "available",
+                "arrived": False,
+                "reserved_for": None,
+                "guest_id": None,
+            }
+
+            supabase.table("seats").update(to_update).eq("id", s_to["id"]).execute()
+            supabase.table("seats").update(from_update).eq("id", s_from["id"]).execute()
+
+        return jsonify({"success": True, "moved_seats": len(common_seats)})
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+# =========================
+# ADMIN: SWAP WHOLE TABLE (seat-to-seat)
+# Spec:
+# 4) สลับโต๊ะ = สลับทุกอย่างเลย (status/arrived/reserved_for/guest_id)
+# =========================
+@app.route("/api/admin/table/swap", methods=["POST"])
+@admin_required
+def api_admin_swap_table():
+    try:
+        data = request.json or {}
+        table_a = int(data.get("table_a"))
+        table_b = int(data.get("table_b"))
+
+        if table_a == table_b:
+            return jsonify({"success": False, "message": "ต้องเลือกคนละโต๊ะ"}), 400
+
+        t_a = _get_table_with_seats(table_a)
+        t_b = _get_table_with_seats(table_b)
+        if not t_a or not t_b:
+            return jsonify({"success": False, "message": "หาโต๊ะไม่เจอ"}), 404
+
+        a_map = _seat_map_by_seat_number(t_a)
+        b_map = _seat_map_by_seat_number(t_b)
+
+        common_seats = sorted(set(a_map.keys()) & set(b_map.keys()))
+        if not common_seats:
+            return jsonify({"success": False, "message": "ไม่มี seat_number ที่ตรงกันให้สลับ"}), 400
+
+        for sn in common_seats:
+            s_a = a_map[sn]
+            s_b = b_map[sn]
+
+            a_state = {
+                "status": _normalize_status(s_a.get("status")) or "available",
+                "arrived": bool(s_a.get("arrived") or False),
+                "reserved_for": (s_a.get("reserved_for") or None),
+                "guest_id": (s_a.get("guest_id") or None),
+            }
+            b_state = {
+                "status": _normalize_status(s_b.get("status")) or "available",
+                "arrived": bool(s_b.get("arrived") or False),
+                "reserved_for": (s_b.get("reserved_for") or None),
+                "guest_id": (s_b.get("guest_id") or None),
+            }
+
+            # swap
+            supabase.table("seats").update(b_state).eq("id", s_a["id"]).execute()
+            supabase.table("seats").update(a_state).eq("id", s_b["id"]).execute()
+
+        return jsonify({"success": True, "swapped_seats": len(common_seats)})
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
 
 # ---------------------------
 # Run
 # ---------------------------
 if __name__ == "__main__":
     app.run(debug=True)
-
-
